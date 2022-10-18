@@ -1,7 +1,9 @@
-package shift;
+package timekeeping;
 
 import base.BaseService;
 import employee.Employee;
+import employee.EmployeeManagement;
+import shift.ShiftManagement;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,88 +12,16 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-public class TimeKeeping extends BaseService implements ITimeKeeping {
+public class TimeKeepingManagement extends BaseService implements ITimeKeepingManagement {
     //attribute
-    private String id;
-    private String employeeId;
-    private String shiftId;
-    private String date;
-    private String checkIn;
-    private String checkOut;
+    private static final String FILE_PATH = "timeKeeping.txt";
     private static List<TimeKeeping> timeKeepingList = new ArrayList<>();
 
     //constructor
-    public TimeKeeping() {
-        this.id = "";
-        this.employeeId = "";
-        this.shiftId = "";
-        this.date = "";
-        this.checkIn = "";
-        this.checkOut = "";
-    }
 
-    public TimeKeeping(String id, String employeeId, String shiftId, String date, String checkIn, String checkOut) {
-        this.id = id;
-        this.employeeId = employeeId;
-        this.shiftId = shiftId;
-        this.date = date;
-        this.checkIn = checkIn;
-        this.checkOut = checkOut;
-    }
-
-    //getter and setter
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(String employeeId) {
-        this.employeeId = employeeId;
-    }
-
-    public String getShiftId() {
-        return shiftId;
-    }
-
-    public void setShiftId(String shiftId) {
-        this.shiftId = shiftId;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getCheckIn() {
-        return checkIn;
-    }
-
-    public void setCheckIn(String checkIn) {
-        this.checkIn = checkIn;
-    }
-
-    public String getCheckOut() {
-        return checkOut;
-    }
-
-    public void setCheckOut(String checkOut) {
-        this.checkOut = checkOut;
-    }
-
-    //method
+    //implement method
     public TimeKeeping findById(String id) {
         for (TimeKeeping timeKeeping : timeKeepingList) {
             if (timeKeeping.getId().equals(id)) {
@@ -102,6 +32,33 @@ public class TimeKeeping extends BaseService implements ITimeKeeping {
     }
 
     public List<TimeKeeping> getTimeKeepingList() {
+        return null;
+    }
+
+    public TimeKeeping findByDate(String date) {
+        for (TimeKeeping timeKeeping : timeKeepingList) {
+            if (timeKeeping.getDate().equals(date)) {
+                return timeKeeping;
+            }
+        }
+        return null;
+    }
+
+    public TimeKeeping findByEmployeeId(String employeeId) {
+        for (TimeKeeping timeKeeping : timeKeepingList) {
+            if (timeKeeping.getEmployeeId().equals(employeeId)) {
+                return timeKeeping;
+            }
+        }
+        return null;
+    }
+
+    public TimeKeeping findByShiftId(String shiftId) {
+        for (TimeKeeping timeKeeping : timeKeepingList) {
+            if (timeKeeping.getShiftId().equals(shiftId)) {
+                return timeKeeping;
+            }
+        }
         return null;
     }
 
@@ -125,7 +82,7 @@ public class TimeKeeping extends BaseService implements ITimeKeeping {
                     this.checkOut();
                     break;
                 case "3":
-                    this.showTimeKeeping();
+                    this.show();
                     break;
                 case "0":
                     System.out.println("Thoat chuong trinh");
@@ -149,7 +106,7 @@ public class TimeKeeping extends BaseService implements ITimeKeeping {
         System.out.println("Nhap ma nhan vien: ");
         String employeeId = sc.nextLine();
         //get employee id
-        Employee employee = new Employee();
+        EmployeeManagement employee = new EmployeeManagement();
         employee.readFile();
         while (employee.findById(employeeId) == null) {
             System.out.println("Ma nhan vien khong ton tai, moi nhap lai");
@@ -159,7 +116,7 @@ public class TimeKeeping extends BaseService implements ITimeKeeping {
         System.out.println("Nhap ma ca lam viec: ");
         String shiftId = sc.nextLine();
         //validate shift id
-        Shift shift = new Shift();
+        ShiftManagement shift = new ShiftManagement();
         shift.readFile();
         while (shift.findById(shiftId) == null) {
             System.out.println("Ma ca lam viec khong ton tai, moi nhap lai");
@@ -209,7 +166,7 @@ public class TimeKeeping extends BaseService implements ITimeKeeping {
             id = sc.nextLine();
         }
         //set checkout to end time of shift if checkout time is greater than end time of shift
-        Shift shift = new Shift();
+        ShiftManagement shift = new ShiftManagement();
         shift.readFile();
         if (checkOut.compareTo(shift.findById(this.findById(id).getShiftId()).getEndTime()) > 0) {
             checkOut = shift.findById(this.findById(id).getShiftId()).getEndTime();
@@ -223,23 +180,31 @@ public class TimeKeeping extends BaseService implements ITimeKeeping {
         this.writeFile();
     }
 
-    private TimeKeeping findByEmployeeId(String employeeId) {
-        for (TimeKeeping timeKeeping : timeKeepingList) {
-            if (timeKeeping.getEmployeeId().equals(employeeId)) {
-                return timeKeeping;
-            }
-        }
-        return null;
-    }
-
     //show time keeping
-    public void showTimeKeeping() {
+    public void show() {
         System.out.println("||=============Danh sach cham cong============||");
         for (TimeKeeping timeKeeping : timeKeepingList) {
             this.printTimeKeeping(timeKeeping);
             System.out.println("==============================================");
         }
     }
+
+    //need to do
+    public void add() {
+
+    }
+    //edit
+    public void edit() {
+    }
+
+    //delete
+    public void delete() {
+    }
+    public void search() {
+    }
+
+
+
 
     //calculate working time when check out
     public int calculateWorkingTime(String checkIn, String checkOut) {
@@ -261,20 +226,24 @@ public class TimeKeeping extends BaseService implements ITimeKeeping {
         return workingTime;
     }
 
-    private void writeFile() {
+    public void writeFile() {
         try {
-            FileWriter fileWriter = new FileWriter("TimeKeeping.txt");
+            FileWriter fileWriter = new FileWriter(FILE_PATH);
             for (TimeKeeping timeKeeping : timeKeepingList) {
-                fileWriter.write(timeKeeping.getId() + "|"
-                        + timeKeeping.getEmployeeId() + "|"
-                        + timeKeeping.getShiftId() + "|"
-                        + timeKeeping.getDate() + "|"
-                        + timeKeeping.getCheckIn() + "|"
-                        + timeKeeping.getCheckOut());
-                fileWriter.write("\n");
+                fileWriter.append(timeKeeping.getId());
+                fileWriter.append(DELIMITER);
+                fileWriter.append(timeKeeping.getEmployeeId());
+                fileWriter.append(DELIMITER);
+                fileWriter.append(timeKeeping.getShiftId());
+                fileWriter.append(DELIMITER);
+                fileWriter.append(timeKeeping.getDate());
+                fileWriter.append(DELIMITER);
+                fileWriter.append(timeKeeping.getCheckIn());
+                fileWriter.append(DELIMITER);
+                fileWriter.append(timeKeeping.getCheckOut());
+                fileWriter.append("\n");
             }
             fileWriter.close();
-
         } catch (IOException e) {
             System.out.println("Loi ghi file");
         }
@@ -284,11 +253,11 @@ public class TimeKeeping extends BaseService implements ITimeKeeping {
     //read file
     public void readFile() {
         try {
-            FileReader fileReader = new FileReader("TimeKeeping.txt");
+            FileReader fileReader = new FileReader(FILE_PATH);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] timeKeepingArray = line.split("\\|");
+            while ((line = bufferedReader.readLine()) != null && !line.isEmpty()) {
+                String[] timeKeepingArray = line.split(SPLIT_PATTERN);
                 TimeKeeping timeKeeping = new TimeKeeping(timeKeepingArray[0], timeKeepingArray[1], timeKeepingArray[2],
                         timeKeepingArray[3], timeKeepingArray[4], timeKeepingArray[5]);
                 timeKeepingList.add(timeKeeping);
@@ -312,6 +281,4 @@ public class TimeKeeping extends BaseService implements ITimeKeeping {
         System.out.println("||Gio ra: " + timeKeeping.getCheckOut());
         System.out.println("||=====================================================||");
     }
-
-
 }

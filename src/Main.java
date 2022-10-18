@@ -1,12 +1,16 @@
-import employee.Department;
-import employee.Employee;
-import shift.Shift;
-import shift.TimeKeeping;
-
+import base.BaseInterface;
+import base.Factory;
+import department.DepartmentManagement;
+import department.IDepartmenManagement;
+import employee.IEmployeeManagement;
+import shift.ShiftManagement;
+import timekeeping.TimeKeepingManagement;
+import employee.EmployeeManagement;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        Factory factory = new Factory();
         Scanner sc = new Scanner(System.in);
         String select ;
         do {
@@ -21,22 +25,24 @@ public class Main {
             select = sc.nextLine();
             switch (select) {
                 case "1":
-                    Department department = new Department();
-                    department.showMenu();
+                    BaseInterface departmentManagement = factory.getInstance("department");
+                    departmentManagement.showMenu();
                     break;
                 case "2":
-                    Employee employee = new Employee();
-                    employee.showMenu();
+                    BaseInterface employeeManagement = factory.getInstance("employee");
+                    employeeManagement.showMenu();
                     break;
                 case "3":
-                    Shift shift = new Shift();
+                    ShiftManagement shift = new ShiftManagement();
                     shift.showMenu();
                     break;
                 case "4":
-                    TimeKeeping timeKeeping = new TimeKeeping();
+                    TimeKeepingManagement timeKeeping = new TimeKeepingManagement();
                     timeKeeping.showMenu();
                     break;
                 case "5":
+                    BaseInterface onleaveManagement = factory.getInstance("onleave");
+                    onleaveManagement.showMenu();
                     break;
                 case "6":
                     break;

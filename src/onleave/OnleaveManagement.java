@@ -1,7 +1,9 @@
-package shift;
+package onleave;
 
+import base.BaseInterface;
 import base.BaseService;
-import employee.Employee;
+import employee.EmployeeManagement;
+import shift.ShiftManagement;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,73 +12,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Onleave extends BaseService implements IOnleave {
-    private String id;
-    private String employeeId;
-    private String shiftId;
-    private String date;
-    private String reason;
-
+public class OnleaveManagement extends BaseService implements BaseInterface {
+    private static final String FILE_PATH = "onleave.txt";
     private static List<Onleave> onleaveList = new ArrayList<>();
 
-    public Onleave() {
-        this.id = "";
-        this.employeeId = "";
-        this.shiftId = "";
-        this.date = "";
-        this.reason = "";
-    }
-
-    public Onleave(String id, String employeeId, String shiftId, String date, String reason) {
-        this.id = id;
-        this.employeeId = employeeId;
-        this.shiftId = shiftId;
-        this.date = date;
-        this.reason = reason;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(String employeeId) {
-        this.employeeId = employeeId;
-    }
-
-    public String getShiftId() {
-        return shiftId;
-    }
-
-    public void setShiftId(String shiftId) {
-        this.shiftId = shiftId;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
     //ShowMenu
-    public void show() {
+    public void showMenu() {
         this.readFile();
         String select;
         do {
@@ -85,6 +26,7 @@ public class Onleave extends BaseService implements IOnleave {
             System.out.println("|| 2. Xoa nghi phep.                            ||");
             System.out.println("|| 3. Sua nghi phep.                            ||");
             System.out.println("|| 4. Xem danh sach nghi phep.                  ||");
+            System.out.println("|| 5. Tim kiem nghi phep.                       ||");
             System.out.println("|| 0. Thoat.                                    ||");
             System.out.println("||==============================================||");
             select = sc.nextLine();
@@ -99,7 +41,10 @@ public class Onleave extends BaseService implements IOnleave {
                     this.edit();
                     break;
                 case "4":
-                    this.showList();
+                    this.show();
+                    break;
+                case "5":
+                    this.search();
                     break;
                 case "0":
                     System.out.println("Thoat");
@@ -117,7 +62,7 @@ public class Onleave extends BaseService implements IOnleave {
         System.out.println("Nhap ma nhan vien: ");
         String employeeId = sc.nextLine();
         //validate employeeId
-        Employee employee = new Employee();
+        EmployeeManagement employee = new EmployeeManagement();
         employee.readFile();
         while (employee.findById(employeeId) == null) {
             System.out.println("Ma nhan vien khong ton tai. Nhap lai: ");
@@ -126,7 +71,7 @@ public class Onleave extends BaseService implements IOnleave {
         System.out.println("Nhap ma ca: ");
         String shiftId = sc.nextLine();
         //validate shiftId
-        Shift shift = new Shift();
+        ShiftManagement shift = new ShiftManagement();
         shift.readFile();
         while (shift.findById(shiftId) == null) {
             System.out.println("Khong ton tai ca , moi nhap lai");
@@ -165,7 +110,7 @@ public class Onleave extends BaseService implements IOnleave {
             System.out.println("Nhap ma nhan vien: ");
             String employeeId = sc.nextLine();
             //validate employeeId
-            Employee employee = new Employee();
+            EmployeeManagement employee = new EmployeeManagement();
             employee.readFile();
             while (employee.findById(employeeId) == null) {
                 System.out.println("Ma nhan vien khong ton tai. Nhap lai: ");
@@ -174,7 +119,7 @@ public class Onleave extends BaseService implements IOnleave {
             System.out.println("Nhap ma ca: ");
             String shiftId = sc.nextLine();
             //validate shiftId
-            Shift shift = new Shift();
+            ShiftManagement shift = new ShiftManagement();
             shift.readFile();
             while (shift.findById(shiftId) == null) {
                 System.out.println("Khong ton tai ca , moi nhap lai");
@@ -192,12 +137,24 @@ public class Onleave extends BaseService implements IOnleave {
         }
     }
 
+    //search
+    public void search() {
+        System.out.println("Nhap ma nghi phep can tim: ");
+        String id = sc.nextLine();
+        Onleave onleave = this.findById(id);
+        if (onleave == null) {
+            System.out.println("Khong ton tai nghi phep nay");
+        } else {
+            System.out.println(onleave);
+        }
+    }
+
 
     //showList
-    public void showList() {
+    public void show() {
         System.out.println("||================= Danh sach nghi phep =================||");
         System.out.println("|| Ma nghi phep | Ma nhan vien | Ma ca | Ngay nghi phep ||");
-        for (Onleave onleave : Onleave.onleaveList) {
+        for (Onleave onleave : OnleaveManagement.onleaveList) {
             System.out.println("|| " + onleave.getId() + " | " + onleave.getEmployeeId() + " | " + onleave.getShiftId() + " | " + onleave.getDate() + " ||");
         }
         System.out.println("||======================================================||");
@@ -205,7 +162,7 @@ public class Onleave extends BaseService implements IOnleave {
 
     //findById
     public Onleave findById(String id) {
-        for (Onleave onleave : Onleave.onleaveList) {
+        for (Onleave onleave : OnleaveManagement.onleaveList) {
             if (onleave.getId().equals(id)) {
                 return onleave;
             }
@@ -213,17 +170,20 @@ public class Onleave extends BaseService implements IOnleave {
         return null;
     }
 
-    //getOnleaveList
-    public List<Onleave> getOnleaveList() {
-        return onleaveList;
-    }
-
     //writeFile
     public void writeFile() {
         try {
             FileWriter fileWriter = new FileWriter("onleave.txt");
-            for (Onleave onleave : Onleave.onleaveList) {
-                fileWriter.write(onleave.getId() + "|" + onleave.getEmployeeId() + "|" + onleave.getShiftId() + "|" + onleave.getDate() + "|" + onleave.getReason());
+            for (Onleave onleave : OnleaveManagement.onleaveList) {
+                fileWriter.append(onleave.getId());
+                fileWriter.append(DELIMITER);
+                fileWriter.append(onleave.getEmployeeId());
+                fileWriter.append(DELIMITER);
+                fileWriter.append(onleave.getShiftId());
+                fileWriter.append(DELIMITER);
+                fileWriter.append(onleave.getDate());
+                fileWriter.append(DELIMITER);
+                fileWriter.append(onleave.getReason());
                 fileWriter.write("\n");
             }
             fileWriter.close();
@@ -235,12 +195,12 @@ public class Onleave extends BaseService implements IOnleave {
     //readFile
     public void readFile() {
         try {
-            FileReader fileReader = new FileReader("onleave.txt");
+            FileReader fileReader = new FileReader(this.FILE_PATH);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line = null;
             while ((line = bufferedReader.readLine()) != null) {
-                String[] onleave = line.split("\\|");
-                Onleave.onleaveList.add(new Onleave(onleave[0], onleave[1], onleave[2], onleave[3], onleave[4]));
+                String[] onleave = line.split(SPLIT_PATTERN);
+                OnleaveManagement.onleaveList.add(new Onleave(onleave[0], onleave[1], onleave[2], onleave[3], onleave[4]));
             }
             bufferedReader.close();
             fileReader.close();
@@ -248,6 +208,5 @@ public class Onleave extends BaseService implements IOnleave {
             e.printStackTrace();
         }
     }
-
 
 }

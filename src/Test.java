@@ -1,6 +1,4 @@
-import employee.Department;
-
-import java.util.List;
+import department.Department;
 
 public class Test {
     protected String name = "Test";
@@ -14,12 +12,7 @@ public class Test {
     public Test(Department department) {
         this.department = department;
     }
-    public List<Department> myFunc() {
-        Test department = Test.this;
-        this.department.readFile();
-        List<Department> departmentList = this.department.getDepartmentList();
-        return departmentList;
-    }
+
 
 
 }

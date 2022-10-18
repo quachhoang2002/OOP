@@ -1,4 +1,4 @@
-package employee;
+package department;
 
 import base.BaseService;
 
@@ -9,49 +9,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Department extends BaseService implements IDeparment {
-    private String id;
-    private String name;
-    private String quantity;
-    private static List<Department> departmentList = new ArrayList<Department>();
+public class DepartmentManagement extends BaseService implements IDepartmenManagement {
+    private static final String FILE_PATH = "department.txt";
+    private static List<Department> departmentList = new ArrayList<>();
 
-    public Department() {
-        this.id = "";
-        this.name = "";
-        this.quantity = "";
-    }
 
-    public Department(String id, String name, String quantity) {
-        this.id = id;
-        this.name = name;
-        this.quantity = quantity;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(String quantity) {
-        this.quantity = quantity;
-    }
-
-    //find by id
+    //region implement method
     public Department findById(String id) {
         for (Department department : departmentList) {
             if (department.getId().equals(id)) {
@@ -60,6 +23,18 @@ public class Department extends BaseService implements IDeparment {
         }
         return null;
     }
+
+    public Department findByName(String name) {
+        for (Department department : departmentList) {
+            if (department.getName().equals(name)) {
+                return department;
+            }
+        }
+        return null;
+    }
+    //endregion
+
+    //region implement base method
 
     //get department list
     public List<Department> getDepartmentList() {
@@ -125,7 +100,7 @@ public class Department extends BaseService implements IDeparment {
     public void show() {
         System.out.println("||================== Danh Sach Phong Ban ===================||");
         for (Department department : departmentList) {
-            this.printItem(department);
+            this.printDepartment(department);
             System.out.println("==============================================");
         }
     }
@@ -156,7 +131,7 @@ public class Department extends BaseService implements IDeparment {
             String select;
             do {
                 System.out.println("============= Thong tin phong ban =============");
-                this.printItem(department);
+                this.printDepartment(department);
                 System.out.println("==============================================");
                 System.out.println("||================== Menu ===================||");
                 System.out.println("||1. Sua ten phong ban                       ||");
@@ -180,6 +155,9 @@ public class Department extends BaseService implements IDeparment {
                         department.setQuantity(quantity);
                         System.out.println("Sua thanh cong");
                         break;
+                    case "0":
+                        System.out.println("Thoat chuc nang sua thong tin phong ban");
+                        break;
                     default:
                         System.out.println("Nhap sai lua chon, xin nhap lai !!!");
                         this.sleep();
@@ -192,54 +170,90 @@ public class Department extends BaseService implements IDeparment {
 
     //search
     public void search() {
-        System.out.println("||================== Tim Phong Ban ===================||");
-        System.out.println("Nhap ma phong ban can tim: ");
-        String id = sc.nextLine();
-        Department department = findById(id);
-        if (department != null) {
-            this.printItem(department);
-            System.out.println("============================================");
-        } else {
-            System.out.println("Khong tim thay phong ban");
-        }
+        String select;
+        do {
+            System.out.println("||================== Tim Phong Ban ===================||");
+            System.out.println("||1. Tim theo ma phong ban                          ||");
+            System.out.println("||2. Tim theo ten phong ban                         ||");
+            System.out.println("||0. Thoat                                          ||");
+            select = sc.nextLine();
+            switch (select) {
+                case "1":
+                    System.out.println("Nhap ma phong ban can tim: ");
+                    String id = sc.nextLine();
+                    Department department = findById(id);
+                    if (department != null) {
+                        System.out.println("||================== Thong Tin Phong Ban ===================||");
+                        this.printDepartment(department);
+                        System.out.println("============================================================");
+                    } else {
+                        System.out.println("Khong tim thay phong ban");
+                    }
+                    break;
+                case "2":
+                    System.out.println("Nhap ten phong ban can tim: ");
+                    String name = sc.nextLine();
+                    Department department1 = findByName(name);
+                    if (department1 != null) {
+                        System.out.println("||================== Thong Tin Phong Ban ===================||");
+                        this.printDepartment(department1);
+                        System.out.println("============================================================");
+                    } else {
+                        System.out.println("Khong tim thay phong ban");
+                    }
+                    break;
+                case "0":
+                    System.out.println("Thoat chuc nang tim phong ban");
+                    break;
+                default:
+                    System.out.println("Nhap sai lua chon, xin nhap lai !!!");
+                    this.sleep();
+            }
+        } while (!select.equals("0"));
     }
 
     //writeFile
     public void writeFile() {
         try {
-            FileWriter fileWriter = new FileWriter("Department.txt");
+            FileWriter fileWriter = new FileWriter(FILE_PATH);
             for (Department department : departmentList) {
-                fileWriter.write(department.getId() + "|" + department.getName() + "|" + department.getQuantity());
-                fileWriter.write("\n");
+                fileWriter.append(department.getId());
+                fileWriter.append(DELIMITER);
+                fileWriter.append(department.getName());
+                fileWriter.append(DELIMITER);
+                fileWriter.append(department.getQuantity());
+                fileWriter.append("\n");
             }
             fileWriter.close();
+            System.out.println("Ghi file thanh cong");
         } catch (IOException e) {
-            System.out.println("Loi ghi file");
+            System.out.println("Loi ghi file: " + e.getMessage());
         }
     }
+
 
     //read file
     public void readFile() {
         try {
-            FileReader fr = new FileReader("Department.txt");
-            BufferedReader br = new BufferedReader(fr);
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(FILE_PATH));
             String line;
-            while ((line = br.readLine()) != null && !line.isEmpty()) {
-                String[] arr = line.split("\\|");
-                Department department = new Department(arr[0], arr[1], arr[2]);
-                departmentList.add(department);
+            while ((line = bufferedReader.readLine()) != null && !line.isEmpty()) {
+                String[] splitData = line.split(SPLIT_PATTERN);
+                if (splitData.length > 0) {
+                    Department department = new Department(splitData[0], splitData[1], splitData[2]);
+                    departmentList.add(department);
+                }
             }
-            fr.close();
-            br.close();
-        } catch (IOException e) {
-            System.out.println("Loi doc file");
+        } catch (Exception e) {
+            System.out.println("Loi doc file: " + e.getMessage());
         }
     }
 
-    private void printItem(Department department) {
+    //endregion
+
+    private void printDepartment(Department department) {
         System.out.println("Ma phong: " + department.getId());
         System.out.println("Ten phong: " + department.getName());
         System.out.println("So luong nhan vien: " + department.getQuantity());
     }
-
 }

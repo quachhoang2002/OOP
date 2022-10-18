@@ -1,16 +1,40 @@
-package shift;
+package timekeeping;
 
-public class Payroll {
+import base.BaseService;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class TimeKeeping extends BaseService  {
+    //attribute
     private String id;
     private String employeeId;
     private String shiftId;
     private String date;
     private String checkIn;
     private String checkOut;
-    private String reason;
-    private String salary;
-    private String netSalary;
+    private static List<TimeKeeping> timeKeepingList = new ArrayList<>();
 
+    //constructor
+    public TimeKeeping() {
+        this.id = "";
+        this.employeeId = "";
+        this.shiftId = "";
+        this.date = "";
+        this.checkIn = "";
+        this.checkOut = "";
+    }
+
+    public TimeKeeping(String id, String employeeId, String shiftId, String date, String checkIn, String checkOut) {
+        this.id = id;
+        this.employeeId = employeeId;
+        this.shiftId = shiftId;
+        this.date = date;
+        this.checkIn = checkIn;
+        this.checkOut = checkOut;
+    }
+
+    //getter and setter
     public String getId() {
         return id;
     }
@@ -59,35 +83,4 @@ public class Payroll {
         this.checkOut = checkOut;
     }
 
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
-    public String getSalary() {
-        return salary;
-    }
-
-    public void setSalary(String salary) {
-        this.salary = salary;
-    }
-
-    public String getNetSalary() {
-        return netSalary;
-    }
-
-    public void setNetSalary(String netSalary) {
-        this.netSalary = netSalary;
-    }
-
-    public Payroll findById(String id) {
-        return null;
-    }
-
-    public List<Payroll> getPayrollList() {
-        return null;
-    }
 }
