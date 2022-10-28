@@ -23,8 +23,9 @@ abstract public class BaseService {
     }
 
     //gererate id
-    public String generateId() {
-        return UUID.randomUUID().toString();
+    public String generateId(String $type) {
+        String UID = $type + "-" + UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+        return UID;
     }
 
     //validate Time format HH:mm
@@ -36,5 +37,7 @@ abstract public class BaseService {
     public String[] splitTime(String time) {
         return time.split(":");
     }
+
+    //check empty input
 
 }

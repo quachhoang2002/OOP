@@ -105,7 +105,7 @@ public class ShiftManagement extends BaseService implements IShiftManagement {
 
     //add
     public void add() {
-        String id = this.generateId();
+        String id = this.generateId("CA");
         System.out.println("Nhap ten ca: ");
         String name = sc.nextLine();
         System.out.println("Nhap gio bat dau: ");

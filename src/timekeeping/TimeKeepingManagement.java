@@ -123,18 +123,9 @@ public class TimeKeepingManagement extends BaseService implements ITimeKeepingMa
             shiftId = sc.nextLine();
         }
         //validate check in time
-        while (checkIn.compareTo(shift.findById(shiftId).getStartTime()) < 0) {
-            //leave out
-            System.out.println("Chua den gio lam, ban co muon thoat khong? (Y/N)");
-            String select = sc.nextLine();
-            if (select.equals("Y")) {
-                return;
-            } else if (select.equals("N")) {
-                System.out.println("Nhap lai gio lam");
-                checkIn = sc.nextLine();
-            } else {
-                System.out.println("Nhap sai, moi nhap lai");
-            }
+        String stratTime = shift.findById(shiftId).getStartTime();
+        if (!validateCheckInTime(checkIn,stratTime)){
+            System.out.println("Thoi gian check in khong hop le");
         }
         //validate have check in in that day
         for (TimeKeeping timeKeeping : timeKeepingList) {
@@ -145,7 +136,7 @@ public class TimeKeepingManagement extends BaseService implements ITimeKeepingMa
         }
         //get date
         String date = now.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        TimeKeeping timeKeeping = new TimeKeeping(this.generateId(), employeeId, shiftId, date, checkIn, "0");
+        TimeKeeping timeKeeping = new TimeKeeping(this.generateId("CC"), employeeId, shiftId, date, checkIn, "0");
         timeKeepingList.add(timeKeeping);
         //write to file
         this.writeFile();
@@ -189,10 +180,25 @@ public class TimeKeepingManagement extends BaseService implements ITimeKeepingMa
         }
     }
 
+    //validate checkin time
+    public boolean validateCheckInTime(String checkIn, String startTime) {
+        String[] checkInTime = checkIn.split(":");
+        String[] startTimeTime = startTime.split(":");
+        if (Integer.parseInt(checkInTime[0]) < Integer.parseInt(startTimeTime[0])) {
+            return false;
+        } else if (Integer.parseInt(checkInTime[0]) == Integer.parseInt(startTimeTime[0])) {
+            if (Integer.parseInt(checkInTime[1]) < Integer.parseInt(startTimeTime[1])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     //need to do
     public void add() {
 
     }
+
     //edit
     public void edit() {
     }
@@ -200,10 +206,9 @@ public class TimeKeepingManagement extends BaseService implements ITimeKeepingMa
     //delete
     public void delete() {
     }
+
     public void search() {
     }
-
-
 
 
     //calculate working time when check out

@@ -132,7 +132,7 @@ public class EmployeeManagement extends BaseService implements IEmployeeManageme
             departmentId = sc.nextLine();
         }
         employee.setDepartmentId(departmentId);
-        employee.setId(this.generateId());
+        employee.setId(this.generateId("NV"));
         System.out.print("Nhap ten nhan vien: ");
         employee.setName(sc.nextLine());
         System.out.print("Nhap tuoi nhan vien: ");

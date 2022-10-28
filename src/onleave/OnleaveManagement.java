@@ -58,7 +58,7 @@ public class OnleaveManagement extends BaseService implements BaseInterface {
 
     //add
     public void add() {
-        String id = this.generateId();
+        String id = this.generateId("NP");
         System.out.println("Nhap ma nhan vien: ");
         String employeeId = sc.nextLine();
         //validate employeeId

@@ -82,7 +82,7 @@ public class DepartmentManagement extends BaseService implements IDepartmenManag
     //create
     public void add() {
         System.out.println("||================== Them Phong Ban ===================||");
-        String id = this.generateId();
+        String id = this.generateId("PB");
         System.out.println("Nhap ten phong ban: ");
         String name = sc.nextLine();
         System.out.println("Nhap so luong nhan vien: ");
