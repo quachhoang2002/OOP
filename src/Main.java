@@ -1,11 +1,8 @@
-import base.BaseInterface;
+import base.IAction;
 import base.Factory;
-import department.DepartmentManagement;
-import department.IDepartmenManagement;
-import employee.IEmployeeManagement;
 import shift.ShiftManagement;
 import timekeeping.TimeKeepingManagement;
-import employee.EmployeeManagement;
+
 import java.util.Scanner;
 
 public class Main {
@@ -25,11 +22,11 @@ public class Main {
             select = sc.nextLine();
             switch (select) {
                 case "1":
-                    BaseInterface departmentManagement = factory.getInstance("department");
+                    IAction departmentManagement = factory.getInstance("department");
                     departmentManagement.showMenu();
                     break;
                 case "2":
-                    BaseInterface employeeManagement = factory.getInstance("employee");
+                    IAction employeeManagement = factory.getInstance("employee");
                     employeeManagement.showMenu();
                     break;
                 case "3":
@@ -41,7 +38,7 @@ public class Main {
                     timeKeeping.showMenu();
                     break;
                 case "5":
-                    BaseInterface onleaveManagement = factory.getInstance("onleave");
+                    IAction onleaveManagement = factory.getInstance("onleave");
                     onleaveManagement.showMenu();
                     break;
                 case "6":

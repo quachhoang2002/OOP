@@ -1,6 +1,6 @@
 package base;
 
-public interface BaseInterface {
+public interface IAction {
     public void add();
 
     public void show();

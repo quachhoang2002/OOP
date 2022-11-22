@@ -3,10 +3,10 @@ package base;
 import java.util.Scanner;
 import java.util.UUID;
 
-abstract public class BaseService {
+abstract public class SystemService implements IAction {
     protected static final String DELIMITER = "|";
     protected static final String SPLIT_PATTERN = "\\|";
-    public Scanner sc = new Scanner(System.in);
+    protected Scanner sc = new Scanner(System.in);
 
     //sleep 1s
     public void sleep() {

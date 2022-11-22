@@ -1,9 +1,7 @@
 package shift;
 
-import base.BaseService;
 
-
-public class Shift extends BaseService {
+public class Shift  {
     private String id;
     private String name;
     private String startTime;

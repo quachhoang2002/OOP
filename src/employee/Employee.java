@@ -1,7 +1,6 @@
 package employee;
 
-import base.BaseService;
-public class Employee extends BaseService  {
+public class Employee   {
     // Properties
     private String id;
     private String name;

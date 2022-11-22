@@ -1,8 +1,8 @@
 package employee;
 
-import base.BaseService;
+import base.SystemService;
+import department.Department;
 import department.DepartmentManagement;
-import department.IDepartmenManagement;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,17 +10,17 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EmployeeManagement extends BaseService implements IEmployeeManagement {
+public class EmployeeManagement extends SystemService {
     private static final String FILE_PATH = "employee.txt";
     private static List<Employee> employeeList= new ArrayList<>();
 
-    private IDepartmenManagement departmentManagement ;
+    private Department departmentManagement ;
     //constructor
     public EmployeeManagement() {
 
     }
 
-    public EmployeeManagement(IDepartmenManagement departmentManagement) {
+    public EmployeeManagement(Department departmentManagement) {
         this.departmentManagement = departmentManagement;
     }
 

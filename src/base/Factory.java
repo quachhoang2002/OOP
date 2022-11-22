@@ -7,7 +7,7 @@ import timekeeping.TimeKeepingManagement;
 
 //factory pattern
 public class Factory {
-    public static BaseInterface getInstance(String type) {
+    public static IAction getInstance(String type) {
         if (type.equals("employee")) {
             return new EmployeeManagement();
         } else if (type.equals("department")) {

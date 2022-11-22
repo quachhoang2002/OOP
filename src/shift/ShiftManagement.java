@@ -1,6 +1,6 @@
 package shift;
 
-import base.BaseService;
+import base.SystemService;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -8,7 +8,7 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShiftManagement extends BaseService implements IShiftManagement {
+public class ShiftManagement extends SystemService {
     private static final String FILE_NAME = "shift.txt";
     private static List<Shift> shiftList = new ArrayList<>();
 

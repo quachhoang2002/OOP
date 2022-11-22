@@ -1,7 +1,6 @@
 package timekeeping;
 
-import base.BaseService;
-import employee.Employee;
+import base.SystemService;
 import employee.EmployeeManagement;
 import shift.ShiftManagement;
 
@@ -14,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TimeKeepingManagement extends BaseService implements ITimeKeepingManagement {
+public class TimeKeepingManagement extends SystemService {
     //attribute
     private static final String FILE_PATH = "timeKeeping.txt";
     private static List<TimeKeeping> timeKeepingList = new ArrayList<>();

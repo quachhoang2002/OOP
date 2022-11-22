@@ -1,6 +1,6 @@
 package department;
 
-import base.BaseService;
+import base.SystemService;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DepartmentManagement extends BaseService implements IDepartmenManagement {
+public class DepartmentManagement extends SystemService {
     private static final String FILE_PATH = "department.txt";
     private static List<Department> departmentList = new ArrayList<>();
 

@@ -1,11 +1,9 @@
 package timekeeping;
 
-import base.BaseService;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class TimeKeeping extends BaseService  {
+public class TimeKeeping  {
     //attribute
     private String id;
     private String employeeId;
