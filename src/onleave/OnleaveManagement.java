@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OnleaveManagement extends SystemService implements IAction {
+public class OnleaveManagement extends SystemService  {
     private static final String FILE_PATH = "onleave.txt";
     private static List<Onleave> onleaveList = new ArrayList<>();
 
