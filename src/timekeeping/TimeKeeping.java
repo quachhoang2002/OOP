@@ -11,6 +11,7 @@ public class TimeKeeping  {
     private String date;
     private String checkIn;
     private String checkOut;
+    private int timeWorking;
     private static List<TimeKeeping> timeKeepingList = new ArrayList<>();
 
     //constructor
@@ -21,15 +22,17 @@ public class TimeKeeping  {
         this.date = "";
         this.checkIn = "";
         this.checkOut = "";
+        this.timeWorking = 0;
     }
 
-    public TimeKeeping(String id, String employeeId, String shiftId, String date, String checkIn, String checkOut) {
+    public TimeKeeping(String id, String employeeId, String shiftId, String date, String checkIn, String checkOut, int timeWorking) {
         this.id = id;
         this.employeeId = employeeId;
         this.shiftId = shiftId;
         this.date = date;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
+        this.timeWorking = timeWorking;
     }
 
     //getter and setter
@@ -79,6 +82,14 @@ public class TimeKeeping  {
 
     public void setCheckOut(String checkOut) {
         this.checkOut = checkOut;
+    }
+
+    public int getTimeWorking() {
+        return timeWorking;
+    }
+
+    public void setTimeWorking(int timeWorking) {
+        this.timeWorking = timeWorking;
     }
 
 }

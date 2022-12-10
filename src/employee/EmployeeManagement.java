@@ -14,15 +14,13 @@ public class EmployeeManagement extends SystemService {
     private static final String FILE_PATH = "employee.txt";
     private static List<Employee> employeeList= new ArrayList<>();
 
-    private Department departmentManagement ;
+    private DepartmentManagement departmentManagement ;
     //constructor
     public EmployeeManagement() {
-
+        this.readFile();
+        this.departmentManagement = new DepartmentManagement();
     }
 
-    public EmployeeManagement(Department departmentManagement) {
-        this.departmentManagement = departmentManagement;
-    }
 
     //region implement method
     //find employee by id
@@ -71,7 +69,6 @@ public class EmployeeManagement extends SystemService {
 
     //region implement base method
     public void showMenu() {
-        this.readFile();
         String select;
         do {
             System.out.println("||================== Menu ===================||");
@@ -114,19 +111,17 @@ public class EmployeeManagement extends SystemService {
         Employee employee = new Employee();
         System.out.println("||==================  Them nhan vien  ===================||");
         //chosen department
-        DepartmentManagement department = new DepartmentManagement();
-        department.readFile();
-        department.show();
+        departmentManagement.show();
         System.out.println("|| Chon phong bang: ");
         String departmentId = sc.nextLine();
         //validate department
-        while (department.findById(departmentId) == null || departmentId.isEmpty()) {
+        while (departmentManagement.findById(departmentId) == null || departmentId.isEmpty()) {
             System.out.println("|| Khong tim thay phong ban , vui long chon lai ");
             departmentId = sc.nextLine();
         }
         //check quantity of department
         List<Employee> employeeList = this.findByDepartmentId(departmentId);
-        String departmentQuantity = department.findById(departmentId).getQuantity();
+        String departmentQuantity = departmentManagement.findById(departmentId).getQuantity();
         while (Integer.parseInt(departmentQuantity) <= employeeList.size()) {
             System.out.println("|| Phong ban da day , vui long chon lai ");
             departmentId = sc.nextLine();
@@ -153,7 +148,6 @@ public class EmployeeManagement extends SystemService {
         System.out.print("Nhap chuc vu nhan vien: ");
         employee.setPermission(sc.nextLine());
         EmployeeManagement.employeeList.add(employee);
-        System.out.println("Them nhan vien thanh cong");
         this.writeFile();
     }
 
@@ -216,10 +210,27 @@ public class EmployeeManagement extends SystemService {
                     case "6":
                         System.out.println("Nhap luong nhan vien moi: ");
                         employee.setSalary(sc.nextLine());
+                        while (!isNumber(employee.getSalary())) {
+                            System.out.println("|| Luong phai la so , vui long nhap lai ");
+                            employee.setSalary(sc.nextLine());
+                        }
                         break;
                     case "7":
                         System.out.println("Nhap phong ban nhan vien moi: ");
-                        employee.setDepartmentId(sc.nextLine());
+                        String departmentId = sc.nextLine();
+                        //validate department
+                        while (departmentManagement.findById(departmentId) == null || departmentId.isEmpty()) {
+                            System.out.println("|| Khong tim thay phong ban , vui long chon lai ");
+                            departmentId = sc.nextLine();
+                        }
+                        //check quantity of department
+                        List<Employee> employeeList = this.findByDepartmentId(departmentId);
+                        String departmentQuantity = departmentManagement.findById(departmentId).getQuantity();
+                        while (Integer.parseInt(departmentQuantity) <= employeeList.size()) {
+                            System.out.println("|| Phong ban da day , vui long chon lai ");
+                            departmentId = sc.nextLine();
+                        }
+                        employee.setDepartmentId(departmentId);
                         break;
                     case "8":
                         System.out.println("Nhap chuc vu nhan vien moi: ");

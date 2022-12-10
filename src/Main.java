@@ -30,12 +30,12 @@ public class Main {
                     employeeManagement.showMenu();
                     break;
                 case "3":
-                    ShiftManagement shift = new ShiftManagement();
-                    shift.showMenu();
+                    IAction shiftManagement = factory.getInstance("shift");
+                    shiftManagement.showMenu();
                     break;
                 case "4":
-                    TimeKeepingManagement timeKeeping = new TimeKeepingManagement();
-                    timeKeeping.showMenu();
+                    IAction timeKeepingManagement = factory.getInstance("timekeeping");
+                    timeKeepingManagement.showMenu();
                     break;
                 case "5":
                     IAction onleaveManagement = factory.getInstance("onleave");

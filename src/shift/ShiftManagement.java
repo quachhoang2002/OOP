@@ -12,6 +12,10 @@ public class ShiftManagement extends SystemService {
     private static final String FILE_NAME = "shift.txt";
     private static List<Shift> shiftList = new ArrayList<>();
 
+    public ShiftManagement() {
+        this.readFile();
+    }
+
     //region implement methods
 
     //get list shift
@@ -65,7 +69,6 @@ public class ShiftManagement extends SystemService {
 
     //show menu
     public void showMenu() {
-        this.readFile();
         String select;
         do {
             System.out.println("||============== Quan ly ca ==============||");

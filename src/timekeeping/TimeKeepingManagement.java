@@ -116,14 +116,13 @@ public class TimeKeepingManagement extends SystemService {
         String shiftId = sc.nextLine();
         //validate shift id
         ShiftManagement shift = new ShiftManagement();
-        shift.readFile();
         while (shift.findById(shiftId) == null) {
             System.out.println("Ma ca lam viec khong ton tai, moi nhap lai");
             shiftId = sc.nextLine();
         }
         //validate check in time
-        String stratTime = shift.findById(shiftId).getStartTime();
-        if (!validateCheckInTime(checkIn,stratTime)){
+        String startTime = shift.findById(shiftId).getStartTime();
+        if (!validateCheckInTime(checkIn,startTime)){
             System.out.println("Thoi gian check in khong hop le");
         }
         //validate have check in in that day
@@ -135,11 +134,13 @@ public class TimeKeepingManagement extends SystemService {
         }
         //get date
         String date = now.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        TimeKeeping timeKeeping = new TimeKeeping(this.generateId("CC"), employeeId, shiftId, date, checkIn, "0");
+        TimeKeeping timeKeeping = new TimeKeeping(this.generateId("CC"), employeeId, shiftId, date, checkIn, "0",0);
+        System.out.println("Day la ma cham cong cua ban: " + timeKeeping.getId());
         timeKeepingList.add(timeKeeping);
         //write to file
         this.writeFile();
     }
+
 
     //check out
     public void checkOut() {
@@ -157,14 +158,15 @@ public class TimeKeepingManagement extends SystemService {
         }
         //set checkout to end time of shift if checkout time is greater than end time of shift
         ShiftManagement shift = new ShiftManagement();
-        shift.readFile();
         if (checkOut.compareTo(shift.findById(this.findById(id).getShiftId()).getEndTime()) > 0) {
             checkOut = shift.findById(this.findById(id).getShiftId()).getEndTime();
         }
         //update check out
+        int calculateWorkingTime = this.calculateWorkingTime(this.findById(id).getCheckIn(), checkOut);
         for (TimeKeeping timeKeeping : timeKeepingList) {
             if (timeKeeping.getId().equals(id)) {
                 timeKeeping.setCheckOut(checkOut);
+                timeKeeping.setTimeWorking(calculateWorkingTime);
             }
         }
         this.writeFile();
@@ -245,6 +247,8 @@ public class TimeKeepingManagement extends SystemService {
                 fileWriter.append(timeKeeping.getCheckIn());
                 fileWriter.append(DELIMITER);
                 fileWriter.append(timeKeeping.getCheckOut());
+                fileWriter.append(DELIMITER);
+                fileWriter.append(String.valueOf(timeKeeping.getTimeWorking()));
                 fileWriter.append("\n");
             }
             fileWriter.close();
@@ -263,7 +267,7 @@ public class TimeKeepingManagement extends SystemService {
             while ((line = bufferedReader.readLine()) != null && !line.isEmpty()) {
                 String[] timeKeepingArray = line.split(SPLIT_PATTERN);
                 TimeKeeping timeKeeping = new TimeKeeping(timeKeepingArray[0], timeKeepingArray[1], timeKeepingArray[2],
-                        timeKeepingArray[3], timeKeepingArray[4], timeKeepingArray[5]);
+                        timeKeepingArray[3], timeKeepingArray[4], timeKeepingArray[5],Integer.parseInt((timeKeepingArray[6])));
                 timeKeepingList.add(timeKeeping);
             }
             bufferedReader.close();

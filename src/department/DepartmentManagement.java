@@ -12,7 +12,9 @@ import java.util.List;
 public class DepartmentManagement extends SystemService {
     private static final String FILE_PATH = "department.txt";
     private static List<Department> departmentList = new ArrayList<>();
-
+    public DepartmentManagement() {
+        this.readFile();
+    }
 
     //region implement method
     public Department findById(String id) {
@@ -42,7 +44,6 @@ public class DepartmentManagement extends SystemService {
     }
 
     public void showMenu() {
-        this.readFile();
         String select;
         do {
             System.out.println("||================== Menu ===================||");

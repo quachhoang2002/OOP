@@ -16,9 +16,14 @@ public class OnleaveManagement extends SystemService  {
     private static final String FILE_PATH = "onleave.txt";
     private static List<Onleave> onleaveList = new ArrayList<>();
 
+    private EmployeeManagement employeeManagement ;
+
+    public OnleaveManagement() {
+        employeeManagement = new EmployeeManagement();
+        this.readFile();
+    }
     //ShowMenu
     public void showMenu() {
-        this.readFile();
         String select;
         do {
             System.out.println("||============== Quan ly nghi phep ==============||");
@@ -53,7 +58,7 @@ public class OnleaveManagement extends SystemService  {
                     System.out.println("Nhap sai");
                     break;
             }
-        } while (select.equals("0"));
+        } while (!select.equals("0"));
     }
 
     //add
@@ -61,10 +66,8 @@ public class OnleaveManagement extends SystemService  {
         String id = this.generateId("NP");
         System.out.println("Nhap ma nhan vien: ");
         String employeeId = sc.nextLine();
-        //validate employeeId
-        EmployeeManagement employee = new EmployeeManagement();
-        employee.readFile();
-        while (employee.findById(employeeId) == null) {
+        //validate employeeId;
+        while (employeeManagement.findById(employeeId) == null) {
             System.out.println("Ma nhan vien khong ton tai. Nhap lai: ");
             employeeId = sc.nextLine();
         }
@@ -77,8 +80,14 @@ public class OnleaveManagement extends SystemService  {
             System.out.println("Khong ton tai ca , moi nhap lai");
             shiftId = sc.nextLine();
         }
-        System.out.println("Nhap ngay nghi phep: ");
-        String date = sc.nextLine();
+        String date = "";
+        try {
+            date = this.dateInput();
+        }catch (Exception e){
+            System.out.println("Nhap sai dinh dang ngay");
+            return;
+        }
+
         System.out.println("Nhap ly do nghi phep: ");
         String reason = sc.nextLine();
         Onleave onleave = new Onleave(id, employeeId, shiftId, date, reason);
@@ -110,9 +119,7 @@ public class OnleaveManagement extends SystemService  {
             System.out.println("Nhap ma nhan vien: ");
             String employeeId = sc.nextLine();
             //validate employeeId
-            EmployeeManagement employee = new EmployeeManagement();
-            employee.readFile();
-            while (employee.findById(employeeId) == null) {
+            while (employeeManagement.findById(employeeId) == null) {
                 System.out.println("Ma nhan vien khong ton tai. Nhap lai: ");
                 employeeId = sc.nextLine();
             }
@@ -120,7 +127,6 @@ public class OnleaveManagement extends SystemService  {
             String shiftId = sc.nextLine();
             //validate shiftId
             ShiftManagement shift = new ShiftManagement();
-            shift.readFile();
             while (shift.findById(shiftId) == null) {
                 System.out.println("Khong ton tai ca , moi nhap lai");
                 shiftId = sc.nextLine();
@@ -170,6 +176,65 @@ public class OnleaveManagement extends SystemService  {
         return null;
     }
 
+    private static boolean checkDate(String date) {
+        String[] dateArr = date.split("-");
+        int day = Integer.parseInt(dateArr[0]);
+        int month = Integer.parseInt(dateArr[1]);
+        int year = Integer.parseInt(dateArr[2]);
+        switch (month) {
+            case 1:
+            case 3:
+            case 5:
+            case 7:
+            case 8:
+            case 10:
+            case 12:
+                if (day > 0 && day <= 31) {
+                    return true;
+                }
+                break;
+            case 4:
+            case 6:
+            case 9:
+            case 11:
+                if (day > 0 && day <= 30) {
+                    return true;
+                }
+                break;
+            case 2:
+                if (year % 4 == 0 && year % 100 != 0 || year % 400 == 0) {
+                    if (day > 0 && day <= 29) {
+                        return true;
+                    }
+                } else {
+                    if (day > 0 && day <= 28) {
+                        return true;
+                    }
+                }
+                break;
+        }
+        return false;
+    }
+
+    private String dateInput() {
+        String date = "";
+        boolean check = false;
+        while (check == false) {
+            System.out.println("Nhap ngay nghi phep: ");
+            String day = sc.nextLine();
+            System.out.println("Thang nghi phep: ");
+            String month = sc.nextLine();
+            System.out.println("Nam nghi phep: ");
+            String year = sc.nextLine();
+            date = day + "-" + month + "-" + year;
+            check = this.checkDate(date);
+            if (check == false) {
+                System.out.println("Ngay nghi phep khong hop le. Nhap lai: ");
+            }
+        }
+        return date;
+    }
+
     //writeFile
     public void writeFile() {
         try {
@@ -198,7 +263,7 @@ public class OnleaveManagement extends SystemService  {
             FileReader fileReader = new FileReader(this.FILE_PATH);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line = null;
-            while ((line = bufferedReader.readLine()) != null) {
+            while ((line = bufferedReader.readLine()) != null && !line.isEmpty()) {
                 String[] onleave = line.split(SPLIT_PATTERN);
                 OnleaveManagement.onleaveList.add(new Onleave(onleave[0], onleave[1], onleave[2], onleave[3], onleave[4]));
             }

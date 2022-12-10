@@ -3,21 +3,26 @@ package base;
 import department.DepartmentManagement;
 import employee.EmployeeManagement;
 import onleave.OnleaveManagement;
+import shift.ShiftManagement;
 import timekeeping.TimeKeepingManagement;
 
 //factory pattern
 public class Factory {
     public static IAction getInstance(String type) {
-        if (type.equals("employee")) {
-            return new EmployeeManagement();
-        } else if (type.equals("department")) {
-            return new DepartmentManagement();
-        } else if (type.equals("TimeKeeping")) {
-            return new TimeKeepingManagement();
-        } else if (type.equals("onleave")) {
-            return new OnleaveManagement();
+        switch (type) {
+            case "department":
+                return new DepartmentManagement();
+            case "employee":
+                return new EmployeeManagement();
+            case "shift":
+                return new ShiftManagement();
+            case "timekeeping":
+                return new TimeKeepingManagement();
+            case "onleave":
+                return new OnleaveManagement();
+            default:
+                return null;
         }
-        return null;
     }
 
 }
