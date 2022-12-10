@@ -12,9 +12,10 @@ import java.util.List;
 
 public class EmployeeManagement extends SystemService {
     private static final String FILE_PATH = "employee.txt";
-    private static List<Employee> employeeList= new ArrayList<>();
+    protected static List<Employee> employeeList= new ArrayList<>();
 
-    private DepartmentManagement departmentManagement ;
+    protected DepartmentManagement departmentManagement ;
+
     //constructor
     public EmployeeManagement() {
         this.readFile();

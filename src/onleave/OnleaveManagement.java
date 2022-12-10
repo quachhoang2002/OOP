@@ -1,6 +1,5 @@
 package onleave;
 
-import base.IAction;
 import base.SystemService;
 import employee.EmployeeManagement;
 import shift.ShiftManagement;
@@ -12,16 +11,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OnleaveManagement extends SystemService  {
+public class OnleaveManagement extends SystemService {
     private static final String FILE_PATH = "onleave.txt";
-    private static List<Onleave> onleaveList = new ArrayList<>();
+    protected static List<Onleave> onleaveList = new ArrayList<>();
 
-    private EmployeeManagement employeeManagement ;
+    protected EmployeeManagement employeeManagement;
+    protected ShiftManagement shiftManagement;
 
     public OnleaveManagement() {
-        employeeManagement = new EmployeeManagement();
+        EmployeeManagement employeeManagement = new EmployeeManagement();
+        ShiftManagement shiftManagement = new ShiftManagement();
         this.readFile();
     }
+
     //ShowMenu
     public void showMenu() {
         String select;
@@ -36,27 +38,13 @@ public class OnleaveManagement extends SystemService  {
             System.out.println("||==============================================||");
             select = sc.nextLine();
             switch (select) {
-                case "1":
-                    this.add();
-                    break;
-                case "2":
-                    this.delete();
-                    break;
-                case "3":
-                    this.edit();
-                    break;
-                case "4":
-                    this.show();
-                    break;
-                case "5":
-                    this.search();
-                    break;
-                case "0":
-                    System.out.println("Thoat");
-                    break;
-                default:
-                    System.out.println("Nhap sai");
-                    break;
+                case "1" -> this.add();
+                case "2" -> this.delete();
+                case "3" -> this.edit();
+                case "4" -> this.show();
+                case "5" -> this.search();
+                case "0" -> System.out.println("Thoat");
+                default -> System.out.println("Nhap sai");
             }
         } while (!select.equals("0"));
     }
@@ -74,7 +62,7 @@ public class OnleaveManagement extends SystemService  {
         System.out.println("Nhap ma ca: ");
         String shiftId = sc.nextLine();
         //validate shiftId
-        ShiftManagement shift = new ShiftManagement();
+        ShiftManagement shift = this.shiftManagement;
         shift.readFile();
         while (shift.findById(shiftId) == null) {
             System.out.println("Khong ton tai ca , moi nhap lai");
@@ -83,7 +71,7 @@ public class OnleaveManagement extends SystemService  {
         String date = "";
         try {
             date = this.dateInput();
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Nhap sai dinh dang ngay");
             return;
         }
@@ -116,30 +104,58 @@ public class OnleaveManagement extends SystemService  {
         if (onleave == null) {
             System.out.println("Khong ton tai nghi phep nay");
         } else {
-            System.out.println("Nhap ma nhan vien: ");
-            String employeeId = sc.nextLine();
-            //validate employeeId
-            while (employeeManagement.findById(employeeId) == null) {
-                System.out.println("Ma nhan vien khong ton tai. Nhap lai: ");
-                employeeId = sc.nextLine();
-            }
-            System.out.println("Nhap ma ca: ");
-            String shiftId = sc.nextLine();
-            //validate shiftId
-            ShiftManagement shift = new ShiftManagement();
-            while (shift.findById(shiftId) == null) {
-                System.out.println("Khong ton tai ca , moi nhap lai");
-                shiftId = sc.nextLine();
-            }
-            System.out.println("Nhap ngay nghi phep: ");
-            String date = sc.nextLine();
-            System.out.println("Nhap ly do nghi phep: ");
-            String reason = sc.nextLine();
-            onleave.setEmployeeId(employeeId);
-            onleave.setShiftId(shiftId);
-            onleave.setDate(date);
-            onleave.setReason(reason);
-            this.writeFile();
+            String select;
+            do {
+                System.out.println("||============== Sua nghi phep ==============||");
+                System.out.println("|| 1. Sua ma nhan vien.                      ||");
+                System.out.println("|| 2. Sua ma ca.                             ||");
+                System.out.println("|| 3. Sua ngay nghi phep.                    ||");
+                System.out.println("|| 4. Sua ly do nghi phep.                   ||");
+                System.out.println("|| 0. Thoat.                                 ||");
+                System.out.println("||===========================================||");
+                select = sc.nextLine();
+                switch (select) {
+                    case "1" -> {
+                        System.out.println("Nhap ma nhan vien: ");
+                        String employeeId = sc.nextLine();
+                        //validate employeeId;
+                        while (employeeManagement.findById(employeeId) == null) {
+                            System.out.println("Ma nhan vien khong ton tai. Nhap lai: ");
+                            employeeId = sc.nextLine();
+                        }
+                        onleave.setEmployeeId(employeeId);
+                    }
+                    case "2" -> {
+                        System.out.println("Nhap ma ca: ");
+                        String shiftId = sc.nextLine();
+                        //validate shiftId
+                        ShiftManagement shift = this.shiftManagement;
+                        shift.readFile();
+                        while (shift.findById(shiftId) == null) {
+                            System.out.println("Khong ton tai ca , moi nhap lai");
+                            shiftId = sc.nextLine();
+                        }
+                        onleave.setShiftId(shiftId);
+                    }
+                    case "3" -> {
+                        String date = "";
+                        try {
+                            date = this.dateInput();
+                        } catch (Exception e) {
+                            System.out.println("Nhap sai dinh dang ngay");
+                            return;
+                        }
+                        onleave.setDate(date);
+                    }
+                    case "4" -> {
+                        System.out.println("Nhap ly do nghi phep: ");
+                        String reason = sc.nextLine();
+                        onleave.setReason(reason);
+                    }
+                    case "0" -> System.out.println("Thoat");
+                    default -> System.out.println("Nhap sai");
+                }
+            } while (!select.equals("0"));
         }
     }
 
@@ -176,7 +192,7 @@ public class OnleaveManagement extends SystemService  {
         return null;
     }
 
-    private static boolean checkDate(String date) {
+    private boolean checkDate(String date) {
         String[] dateArr = date.split("-");
         int day = Integer.parseInt(dateArr[0]);
         int month = Integer.parseInt(dateArr[1]);
@@ -219,7 +235,7 @@ public class OnleaveManagement extends SystemService  {
     private String dateInput() {
         String date = "";
         boolean check = false;
-        while (check == false) {
+        while (!check) {
             System.out.println("Nhap ngay nghi phep: ");
             String day = sc.nextLine();
             System.out.println("Thang nghi phep: ");
@@ -228,7 +244,7 @@ public class OnleaveManagement extends SystemService  {
             String year = sc.nextLine();
             date = day + "-" + month + "-" + year;
             check = this.checkDate(date);
-            if (check == false) {
+            if (!check) {
                 System.out.println("Ngay nghi phep khong hop le. Nhap lai: ");
             }
         }

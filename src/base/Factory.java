@@ -8,21 +8,15 @@ import timekeeping.TimeKeepingManagement;
 
 //factory pattern
 public class Factory {
-    public static IAction getInstance(String type) {
-        switch (type) {
-            case "department":
-                return new DepartmentManagement();
-            case "employee":
-                return new EmployeeManagement();
-            case "shift":
-                return new ShiftManagement();
-            case "timekeeping":
-                return new TimeKeepingManagement();
-            case "onleave":
-                return new OnleaveManagement();
-            default:
-                return null;
-        }
+    public IAction getInstance(String type) {
+        return switch (type) {
+            case "department" -> new DepartmentManagement();
+            case "employee" -> new EmployeeManagement();
+            case "shift" -> new ShiftManagement();
+            case "timekeeping" -> new TimeKeepingManagement();
+            case "onleave" -> new OnleaveManagement();
+            default -> null;
+        };
     }
 
 }

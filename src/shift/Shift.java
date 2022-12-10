@@ -7,17 +7,17 @@ public class Shift  {
     private String startTime;
     private String endTime;
 
-    private String workingTime;
+    private int workingTime;
 
     public Shift() {
         this.id = "";
         this.name = "";
         this.startTime = "";
         this.endTime = "";
-        this.workingTime = "";
+        this.workingTime = 0;
     }
 
-    public Shift(String id, String name, String startTime, String endTime, String workingTime) {
+    public Shift(String id, String name, String startTime, String endTime, int workingTime) {
         this.id = id;
         this.name = name;
         this.startTime = startTime;
@@ -56,12 +56,11 @@ public class Shift  {
     public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
-
-    public String getWorkingTime() {
+    public int getWorkingTime() {
         return workingTime;
     }
 
-    public void setWorkingTime(String workingTime) {
+    public void setWorkingTime(int workingTime) {
         this.workingTime = workingTime;
     }
 

@@ -24,13 +24,54 @@ abstract public class SystemService implements IAction {
 
     //gererate id
     public static String generateId(String $type) {
-        String UID = $type + "-" + UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+        String UID = UUID.randomUUID().toString().replace("-", "");
+        UID = UID + System.currentTimeMillis();
+        UID = $type + "-" + UID.substring(9, 15).toUpperCase();
         return UID;
     }
 
     //validate Time format HH:mm
     public static boolean validateTime(String time) {
         return time.matches("([01]?[0-9]|2[0-3]):[0-5][0-9]");
+    }
+
+    public boolean validateStartEndTime(String endTime, String startTime) {
+        if (!validateTime(endTime) || !validateTime(startTime)) {
+            return false;
+        }
+        String[] start = this.splitTime(startTime);
+        String[] end = this.splitTime(endTime);
+        int startHour = Integer.parseInt(start[0]);
+        int startMinute = Integer.parseInt(start[1]);
+        int endHour = Integer.parseInt(end[0]);
+        int endMinute = Integer.parseInt(end[1]);
+        if (endHour > startHour) {
+            return true;
+        } else if (endHour == startHour) {
+            if (endMinute > startMinute) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int calculateWorkingTime(String startTime, String endTime) {
+        int workingTime = 0;
+        if (endTime.isEmpty() || endTime.equals("0")) {
+            return workingTime;
+        }
+        String[] checkInTime = startTime.split(":");
+        String[] checkOutTime = endTime.split(":");
+        int checkInHour = Integer.parseInt(checkInTime[0]);
+        int checkInMinute = Integer.parseInt(checkInTime[1]);
+        int checkOutHour = Integer.parseInt(checkOutTime[0]);
+        int checkOutMinute = Integer.parseInt(checkOutTime[1]);
+        if (checkOutHour > checkInHour) {
+            workingTime = (checkOutHour - checkInHour) * 60 + (checkOutMinute - checkInMinute);
+        } else if (checkOutHour == checkInHour) {
+            workingTime = checkOutMinute - checkInMinute;
+        }
+        return workingTime;
     }
 
 

@@ -10,11 +10,12 @@ import java.util.List;
 
 public class ShiftManagement extends SystemService {
     private static final String FILE_NAME = "shift.txt";
-    private static List<Shift> shiftList = new ArrayList<>();
+    protected static List<Shift> shiftList = new ArrayList<>();
 
     public ShiftManagement() {
         this.readFile();
     }
+
 
     //region implement methods
 
@@ -81,27 +82,13 @@ public class ShiftManagement extends SystemService {
             System.out.println("||=======================================||");
             select = sc.nextLine();
             switch (select) {
-                case "1":
-                    this.add();
-                    break;
-                case "2":
-                    this.edit();
-                    break;
-                case "3":
-                    this.delete();
-                    break;
-                case "4":
-                    this.show();
-                    break;
-                case "5":
-                    this.search();
-                    break;
-                case "0":
-                    System.out.println("Thoat chuong trinh");
-                    break;
-                default:
-                    System.out.println("Lua chon khong hop le");
-                    break;
+                case "1" -> this.add();
+                case "2" -> this.edit();
+                case "3" -> this.delete();
+                case "4" -> this.show();
+                case "5" -> this.search();
+                case "0" -> System.out.println("Thoat chuong trinh");
+                default -> System.out.println("Lua chon khong hop le");
             }
         } while (!select.equals("0"));
     }
@@ -127,10 +114,10 @@ public class ShiftManagement extends SystemService {
         }
         //validate end time > start time
         while (!this.validateStartEndTime(endTime, startTime)) {
-            System.out.println("Gio ket thuc phai lon hon gio bat dau. Vui long nhap lai");
+            System.out.println("Gio ket thuc phai lon hon gio bat dau. Vui long nhap lai:");
             endTime = sc.nextLine();
         }
-        Shift shift = new Shift(id, name, startTime, endTime,Integer.toString(calculateTimeWorking(startTime,endTime)));
+        Shift shift = new Shift(id, name, startTime, endTime, calculateWorkingTime(startTime, endTime));
         ShiftManagement.shiftList.add(shift);
         this.writeFile();
     }
@@ -141,15 +128,60 @@ public class ShiftManagement extends SystemService {
         String id = sc.nextLine();
         Shift shift = this.findById(id);
         if (shift != null) {
-            System.out.println("Nhap ten ca moi: ");
-            String name = sc.nextLine();
-            System.out.println("Nhap gio bat dau moi: ");
-            String startTime = sc.nextLine();
-            System.out.println("Nhap gio ket thuc moi: ");
-            String endTime = sc.nextLine();
-            shift.setName(name);
-            shift.setStartTime(startTime);
-            shift.setEndTime(endTime);
+            String select;
+            do {
+                System.out.println("||============== Sua ca ==============||");
+                System.out.println("|| 1. Sua ten ca                      ||");
+                System.out.println("|| 2. Sua gio bat dau                 ||");
+                System.out.println("|| 3. Sua gio ket thuc                ||");
+                System.out.println("|| 0. Thoat                           ||");
+                System.out.println("||===================================||");
+                select = sc.nextLine();
+                switch (select) {
+                    case "1" -> {
+                        System.out.println("Nhap ten ca moi: ");
+                        String name = sc.nextLine();
+                        shift.setName(name);
+                        break;
+                    }
+                    case "2" -> {
+                        System.out.println("Nhap gio bat dau moi: ");
+                        String startTime = sc.nextLine();
+                        //validate start time
+                        while (!validateTime(startTime)) {
+                            System.out.println("Gio bat dau khong hop le. Vui long nhap lai");
+                            startTime = sc.nextLine();
+                        }
+                        String endTime = shift.getEndTime();
+                        while (!this.validateStartEndTime(endTime, startTime)) {
+                            System.out.println("Gio ket thuc phai lon hon gio bat dau. Vui long nhap lai");
+                            startTime = sc.nextLine();
+                        }
+                        shift.setStartTime(startTime);
+                        break;
+                    }
+                    case "3" -> {
+                        System.out.println("Nhap gio ket thuc moi: ");
+                        String endTime = sc.nextLine();
+                        String startTime = shift.getStartTime();
+                        //validate end time
+                        while (!validateTime(endTime)) {
+                            System.out.println("Gio ket thuc khong hop le. Vui long nhap lai");
+                            endTime = sc.nextLine();
+                        }
+                        //validate end time > start time
+                        while (!this.validateStartEndTime(endTime, startTime)) {
+                            System.out.println("Gio ket thuc phai lon hon gio bat dau. Vui long nhap lai");
+                            endTime = sc.nextLine();
+                        }
+                        shift.setEndTime(endTime);
+                        shift.setWorkingTime(calculateWorkingTime(startTime, endTime));
+                        break;
+                    }
+                    case "0" -> System.out.println("Thoat chuong trinh");
+                    default -> System.out.println("Lua chon khong hop le");
+                }
+            } while (!select.equals("0"));
             this.writeFile();
         } else {
             System.out.println("Khong tim thay ca can sua");
@@ -239,7 +271,7 @@ public class ShiftManagement extends SystemService {
                     System.out.println("Lua chon khong hop le");
                     break;
             }
-        }while (!select.equals("0"));
+        } while (!select.equals("0"));
 
     }
 
@@ -255,7 +287,7 @@ public class ShiftManagement extends SystemService {
                 fileWriter.append(DELIMITER);
                 fileWriter.append(shift.getEndTime());
                 fileWriter.append(DELIMITER);
-                fileWriter.append(shift.getWorkingTime());
+                fileWriter.append(String.valueOf(shift.getWorkingTime()));
                 fileWriter.append("\n");
             }
             fileWriter.close();
@@ -271,7 +303,7 @@ public class ShiftManagement extends SystemService {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] arr = line.split(SPLIT_PATTERN);
-                Shift shift = new Shift(arr[0], arr[1], arr[2], arr[3], arr[4]);
+                Shift shift = new Shift(arr[0], arr[1], arr[2], arr[3], Integer.parseInt(arr[4]));
                 ShiftManagement.shiftList.add(shift);
             }
         } catch (Exception e) {
@@ -283,34 +315,10 @@ public class ShiftManagement extends SystemService {
 
 
     //validate endtime > starttime
-    private boolean validateStartEndTime(String endTime, String startTime) {
-        String[] start = this.splitTime(startTime);
-        String[] end = this.splitTime(endTime);
-        int startHour = Integer.parseInt(start[0]);
-        int startMinute = Integer.parseInt(start[1]);
-        int endHour = Integer.parseInt(end[0]);
-        int endMinute = Integer.parseInt(end[1]);
-        if (endHour > startHour) {
-            return true;
-        } else if (endHour == startHour) {
-            if (endMinute > startMinute) {
-                return true;
-            }
-        }
-        return false;
-    }
 
-    //calculate time working
-    private int calculateTimeWorking(String startTime, String endTime) {
-        String[] start = this.splitTime(startTime);
-        String[] end = this.splitTime(endTime);
-        int startHour = Integer.parseInt(start[0]);
-        int startMinute = Integer.parseInt(start[1]);
-        int endHour = Integer.parseInt(end[0]);
-        int endMinute = Integer.parseInt(end[1]);
-        int timeWorking = (endHour - startHour) * 60 + (endMinute - startMinute);
-        return timeWorking;
-    }
+
+
+
     private void printShift(Shift shift) {
         System.out.println("Ma ca: " + shift.getId());
         System.out.println("Ten ca: " + shift.getName());

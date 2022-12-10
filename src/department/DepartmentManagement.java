@@ -11,7 +11,7 @@ import java.util.List;
 
 public class DepartmentManagement extends SystemService {
     private static final String FILE_PATH = "department.txt";
-    private static List<Department> departmentList = new ArrayList<>();
+    protected static List<Department> departmentList = new ArrayList<>();
     public DepartmentManagement() {
         this.readFile();
     }
@@ -55,26 +55,13 @@ public class DepartmentManagement extends SystemService {
             System.out.println("||0. Thoat                                   ||");
             select = sc.nextLine();
             switch (select) {
-                case "1":
-                    add();
-                    break;
-                case "2":
-                    edit();
-                    break;
-                case "3":
-                    delete();
-                    break;
-                case "4":
-                    show();
-                    break;
-                case "5":
-                    search();
-                    break;
-                case "0":
-                    System.out.println("BAN DA THOAT CHUC NANG PHONG BAN");
-                    break;
-                default:
-                    System.out.println("Nhap sai lua chon, xin nhap lai !!!");
+                case "1" -> add();
+                case "2" -> edit();
+                case "3" -> delete();
+                case "4" -> show();
+                case "5" -> search();
+                case "0" -> System.out.println("BAN DA THOAT CHUC NANG PHONG BAN");
+                default -> System.out.println("Nhap sai lua chon, xin nhap lai !!!");
             }
         } while (!select.equals("0"));
         sleep();
@@ -140,13 +127,13 @@ public class DepartmentManagement extends SystemService {
                 System.out.println("||0. Thoat                                   ||");
                 select = sc.nextLine();
                 switch (select) {
-                    case "1":
+                    case "1" -> {
                         System.out.println("Nhap ten phong ban moi: ");
                         String name = sc.nextLine();
                         department.setName(name);
                         System.out.println("Sua thanh cong");
-                        break;
-                    case "2":
+                    }
+                    case "2" -> {
                         System.out.println("Nhap so luong nhan vien moi: ");
                         String quantity = sc.nextLine();
                         while (!isNumber(quantity)) {
@@ -155,13 +142,12 @@ public class DepartmentManagement extends SystemService {
                         }
                         department.setQuantity(quantity);
                         System.out.println("Sua thanh cong");
-                        break;
-                    case "0":
-                        System.out.println("Thoat chuc nang sua thong tin phong ban");
-                        break;
-                    default:
+                    }
+                    case "0" -> System.out.println("Thoat chuc nang sua thong tin phong ban");
+                    default -> {
                         System.out.println("Nhap sai lua chon, xin nhap lai !!!");
                         this.sleep();
+                    }
                 }
             } while (!select.equals("0"));
             this.writeFile();
