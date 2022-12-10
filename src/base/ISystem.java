@@ -1,6 +1,6 @@
 package base;
 
-public interface IAction {
+public interface ISystem {
     public void add();
 
     public void show();

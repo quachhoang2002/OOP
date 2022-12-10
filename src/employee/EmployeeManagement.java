@@ -128,7 +128,7 @@ public class EmployeeManagement extends SystemService {
             departmentId = sc.nextLine();
         }
         employee.setDepartmentId(departmentId);
-        employee.setId(this.generateId("NV"));
+        employee.setId(SystemService.generateId("NV"));
         System.out.print("Nhap ten nhan vien: ");
         employee.setName(sc.nextLine());
         System.out.print("Nhap tuoi nhan vien: ");
@@ -271,7 +271,7 @@ public class EmployeeManagement extends SystemService {
             System.out.println("0. Exit");
             select = sc.nextLine();
             switch (select) {
-                case "1": {
+                case "1" -> {
                     System.out.println("Nhap id nhan vien can tim kiem: ");
                     String id = sc.nextLine();
                     Employee employee = findById(id);
@@ -283,8 +283,7 @@ public class EmployeeManagement extends SystemService {
                         System.out.println("||============================================================||");
                     }
                 }
-                break;
-                case "2": {
+                case "2" -> {
                     System.out.println("Nhap ten nhan vien can tim kiem: ");
                     String name = sc.nextLine();
                     List<Employee> employeeList = findByName(name);
@@ -298,8 +297,7 @@ public class EmployeeManagement extends SystemService {
                         }
                     }
                 }
-                break;
-                case "3": {
+                case "3" -> {
                     System.out.println("Nhap id phong ban nhan vien can tim kiem: ");
                     String departmentId = sc.nextLine();
                     List<Employee> employeeList = findByDepartmentId(departmentId);
@@ -313,8 +311,7 @@ public class EmployeeManagement extends SystemService {
                         }
                     }
                 }
-                break;
-                case "4": {
+                case "4" -> {
                     System.out.println("Nhap chuc vu nhan vien can tim kiem: ");
                     String permission = sc.nextLine();
                     List<Employee> employeeList = findByPermission(permission);
@@ -328,12 +325,8 @@ public class EmployeeManagement extends SystemService {
                         }
                     }
                 }
-                break;
-                case "0":
-                    System.out.println("Thoat chuc nang tim kiem");
-                    break;
-                default:
-                    System.out.println("Nhap sai, moi nhap lai");
+                case "0" -> System.out.println("Thoat chuc nang tim kiem");
+                default -> System.out.println("Nhap sai, moi nhap lai");
             }
         }
         while (!select.equals("0"));
@@ -365,7 +358,7 @@ public class EmployeeManagement extends SystemService {
             }
             fileWriter.close();
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println("Loi ghi file");
         }
     }
 
@@ -391,7 +384,7 @@ public class EmployeeManagement extends SystemService {
                 employeeList.add(employee);
             }
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println("Loi doc file");
         }
 
 

@@ -1,7 +1,5 @@
-import base.IAction;
+import base.ISystem;
 import base.Factory;
-import shift.ShiftManagement;
-import timekeeping.TimeKeepingManagement;
 
 import java.util.Scanner;
 
@@ -22,29 +20,29 @@ public class Main {
             select = sc.nextLine();
             switch (select) {
                 case "1":
-                    IAction departmentManagement = factory.getInstance("department");
+                    ISystem departmentManagement = factory.getInstance("department");
                     departmentManagement.showMenu();
                     break;
                 case "2":
-                    IAction employeeManagement = factory.getInstance("employee");
+                    ISystem employeeManagement = factory.getInstance("employee");
                     employeeManagement.showMenu();
                     break;
                 case "3":
-                    IAction shiftManagement = factory.getInstance("shift");
+                    ISystem shiftManagement = factory.getInstance("shift");
                     shiftManagement.showMenu();
                     break;
                 case "4":
-                    IAction timeKeepingManagement = factory.getInstance("timekeeping");
+                    ISystem timeKeepingManagement = factory.getInstance("timekeeping");
                     timeKeepingManagement.showMenu();
                     break;
                 case "5":
-                    IAction onleaveManagement = factory.getInstance("onleave");
+                    ISystem onleaveManagement = factory.getInstance("onleave");
                     onleaveManagement.showMenu();
                     break;
                 case "6":
                     break;
                 case "0":
-                    System.out.println("0BAN DA THOAT CHUONG TRINH");
+                    System.out.println("0=BAN DA THOAT CHUONG TRINH");
                     break;
                 default:
                     System.out.println("Nhap sai lua chon, xin nhap lai !!!");

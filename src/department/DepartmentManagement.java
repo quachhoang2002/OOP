@@ -70,7 +70,7 @@ public class DepartmentManagement extends SystemService {
     //create
     public void add() {
         System.out.println("||================== Them Phong Ban ===================||");
-        String id = this.generateId("PB");
+        String id = SystemService.generateId("PB");
         System.out.println("Nhap ten phong ban: ");
         String name = sc.nextLine();
         System.out.println("Nhap so luong nhan vien: ");
@@ -146,7 +146,6 @@ public class DepartmentManagement extends SystemService {
                     case "0" -> System.out.println("Thoat chuc nang sua thong tin phong ban");
                     default -> {
                         System.out.println("Nhap sai lua chon, xin nhap lai !!!");
-                        this.sleep();
                     }
                 }
             } while (!select.equals("0"));
@@ -165,7 +164,7 @@ public class DepartmentManagement extends SystemService {
             System.out.println("||0. Thoat                                          ||");
             select = sc.nextLine();
             switch (select) {
-                case "1":
+                case "1" -> {
                     System.out.println("Nhap ma phong ban can tim: ");
                     String id = sc.nextLine();
                     Department department = findById(id);
@@ -176,8 +175,8 @@ public class DepartmentManagement extends SystemService {
                     } else {
                         System.out.println("Khong tim thay phong ban");
                     }
-                    break;
-                case "2":
+                }
+                case "2" -> {
                     System.out.println("Nhap ten phong ban can tim: ");
                     String name = sc.nextLine();
                     Department department1 = findByName(name);
@@ -188,13 +187,9 @@ public class DepartmentManagement extends SystemService {
                     } else {
                         System.out.println("Khong tim thay phong ban");
                     }
-                    break;
-                case "0":
-                    System.out.println("Thoat chuc nang tim phong ban");
-                    break;
-                default:
-                    System.out.println("Nhap sai lua chon, xin nhap lai !!!");
-                    this.sleep();
+                }
+                case "0" -> System.out.println("Thoat chuc nang tim phong ban");
+                default -> System.out.println("Nhap sai lua chon, xin nhap lai !!!");
             }
         } while (!select.equals("0"));
     }

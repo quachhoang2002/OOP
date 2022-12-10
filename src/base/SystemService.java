@@ -3,7 +3,7 @@ package base;
 import java.util.Scanner;
 import java.util.UUID;
 
-abstract public class SystemService implements IAction {
+abstract public class SystemService implements ISystem {
     protected static final String DELIMITER = "|";
     protected static final String SPLIT_PATTERN = "\\|";
     protected Scanner sc = new Scanner(System.in);
@@ -39,8 +39,8 @@ abstract public class SystemService implements IAction {
         if (!validateTime(endTime) || !validateTime(startTime)) {
             return false;
         }
-        String[] start = this.splitTime(startTime);
-        String[] end = this.splitTime(endTime);
+        String[] start = SystemService.splitTime(startTime);
+        String[] end = SystemService.splitTime(endTime);
         int startHour = Integer.parseInt(start[0]);
         int startMinute = Integer.parseInt(start[1]);
         int endHour = Integer.parseInt(end[0]);

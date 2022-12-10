@@ -109,6 +109,7 @@ public class TimeKeepingManagement extends SystemService {
         while (employee == null) {
             System.out.println("Ma nhan vien khong ton tai, moi nhap lai");
             employeeId = sc.nextLine();
+            employee = this.employeeManagement.findById(employeeId);
         }
         //get shift id
         System.out.println("Nhap ma ca lam viec: ");

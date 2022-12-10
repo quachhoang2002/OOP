@@ -8,7 +8,7 @@ import timekeeping.TimeKeepingManagement;
 
 //factory pattern
 public class Factory {
-    public IAction getInstance(String type) {
+    public ISystem getInstance(String type) {
         return switch (type) {
             case "department" -> new DepartmentManagement();
             case "employee" -> new EmployeeManagement();

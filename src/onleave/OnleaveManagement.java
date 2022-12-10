@@ -19,8 +19,8 @@ public class OnleaveManagement extends SystemService {
     protected ShiftManagement shiftManagement;
 
     public OnleaveManagement() {
-        EmployeeManagement employeeManagement = new EmployeeManagement();
-        ShiftManagement shiftManagement = new ShiftManagement();
+        employeeManagement = new EmployeeManagement();
+        shiftManagement = new ShiftManagement();
         this.readFile();
     }
 
@@ -79,7 +79,7 @@ public class OnleaveManagement extends SystemService {
         System.out.println("Nhap ly do nghi phep: ");
         String reason = sc.nextLine();
         Onleave onleave = new Onleave(id, employeeId, shiftId, date, reason);
-        this.onleaveList.add(onleave);
+        OnleaveManagement.onleaveList.add(onleave);
         this.writeFile();
     }
 
@@ -91,7 +91,7 @@ public class OnleaveManagement extends SystemService {
         if (onleave == null) {
             System.out.println("Khong ton tai nghi phep nay");
         } else {
-            this.onleaveList.remove(onleave);
+            OnleaveManagement.onleaveList.remove(onleave);
             this.writeFile();
         }
     }
@@ -276,7 +276,7 @@ public class OnleaveManagement extends SystemService {
     //readFile
     public void readFile() {
         try {
-            FileReader fileReader = new FileReader(this.FILE_PATH);
+            FileReader fileReader = new FileReader(OnleaveManagement.FILE_PATH);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line = null;
             while ((line = bufferedReader.readLine()) != null && !line.isEmpty()) {

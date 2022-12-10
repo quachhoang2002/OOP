@@ -95,7 +95,7 @@ public class ShiftManagement extends SystemService {
 
     //add
     public void add() {
-        String id = this.generateId("CA");
+        String id = SystemService.generateId("CA");
         System.out.println("Nhap ten ca: ");
         String name = sc.nextLine();
         System.out.println("Nhap gio bat dau: ");
@@ -142,7 +142,6 @@ public class ShiftManagement extends SystemService {
                         System.out.println("Nhap ten ca moi: ");
                         String name = sc.nextLine();
                         shift.setName(name);
-                        break;
                     }
                     case "2" -> {
                         System.out.println("Nhap gio bat dau moi: ");
@@ -158,7 +157,6 @@ public class ShiftManagement extends SystemService {
                             startTime = sc.nextLine();
                         }
                         shift.setStartTime(startTime);
-                        break;
                     }
                     case "3" -> {
                         System.out.println("Nhap gio ket thuc moi: ");
@@ -176,7 +174,6 @@ public class ShiftManagement extends SystemService {
                         }
                         shift.setEndTime(endTime);
                         shift.setWorkingTime(calculateWorkingTime(startTime, endTime));
-                        break;
                     }
                     case "0" -> System.out.println("Thoat chuong trinh");
                     default -> System.out.println("Lua chon khong hop le");
@@ -312,13 +309,6 @@ public class ShiftManagement extends SystemService {
 
     }
     //endregion
-
-
-    //validate endtime > starttime
-
-
-
-
     private void printShift(Shift shift) {
         System.out.println("Ma ca: " + shift.getId());
         System.out.println("Ten ca: " + shift.getName());
