@@ -1,11 +1,9 @@
 package department;
 
-
 public class Department  {
     private String id;
     private String name;
     private String quantity;
-
 
     public Department() {
         this.id = "";

@@ -3,17 +3,17 @@ package Payroll;
 public class Payroll {
     private String id;
     private String employeeId;
-    private String totalSalary;
+    private float totalSalary;
     private String date;
 
     public Payroll() {
         this.id = "";
         this.employeeId = "";
-        this.totalSalary = "";
+        this.totalSalary = 0;
         this.date = "";
     }
 
-    public Payroll(String id, String employeeId, String totalSalary, String date) {
+    public Payroll(String id, String employeeId, float totalSalary, String date) {
         this.id = id;
         this.employeeId = employeeId;
         this.totalSalary = totalSalary;
@@ -36,11 +36,11 @@ public class Payroll {
         this.employeeId = employeeId;
     }
 
-    public String getTotalSalary() {
+    public float getTotalSalary() {
         return totalSalary;
     }
 
-    public void setTotalSalary(String totalSalary) {
+    public void setTotalSalary(float totalSalary) {
         this.totalSalary = totalSalary;
     }
 
@@ -51,5 +51,6 @@ public class Payroll {
     public void setDate(String date) {
         this.date = date;
     }
+
 
 }

@@ -1,5 +1,6 @@
 package base;
 
+import Payroll.PayrollManagement;
 import department.DepartmentManagement;
 import employee.EmployeeManagement;
 import onleave.OnleaveManagement;
@@ -15,6 +16,7 @@ public class Factory {
             case "shift" -> new ShiftManagement();
             case "timekeeping" -> new TimeKeepingManagement();
             case "onleave" -> new OnleaveManagement();
+            case "payroll" -> new PayrollManagement();
             default -> null;
         };
     }

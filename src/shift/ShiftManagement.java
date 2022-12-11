@@ -17,14 +17,11 @@ public class ShiftManagement extends SystemService {
     }
 
 
-    //region implement methods
-
-    //get list shift
+    //region base method
     public List<Shift> getShiftList() {
         return ShiftManagement.shiftList;
     }
 
-    //find by id
     public Shift findById(String id) {
         for (Shift shift : ShiftManagement.shiftList) {
             if (shift.getId().equals(id)) {
@@ -34,7 +31,6 @@ public class ShiftManagement extends SystemService {
         return null;
     }
 
-    //find by name
     public Shift findByName(String name) {
         for (Shift shift : ShiftManagement.shiftList) {
             if (shift.getName().equals(name)) {
@@ -44,7 +40,6 @@ public class ShiftManagement extends SystemService {
         return null;
     }
 
-    //find by start time
     public Shift findByStartTime(String startTime) {
         for (Shift shift : ShiftManagement.shiftList) {
             if (shift.getStartTime().equals(startTime)) {
@@ -54,7 +49,6 @@ public class ShiftManagement extends SystemService {
         return null;
     }
 
-    //find by end time
     public Shift findByEndTime(String endTime) {
         for (Shift shift : ShiftManagement.shiftList) {
             if (shift.getEndTime().equals(endTime)) {

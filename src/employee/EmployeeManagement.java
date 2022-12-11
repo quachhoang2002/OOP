@@ -12,9 +12,9 @@ import java.util.List;
 
 public class EmployeeManagement extends SystemService {
     private static final String FILE_PATH = "employee.txt";
-    protected static List<Employee> employeeList= new ArrayList<>();
+    protected static List<Employee> employeeList = new ArrayList<>();
 
-    protected DepartmentManagement departmentManagement ;
+    protected DepartmentManagement departmentManagement;
 
     //constructor
     public EmployeeManagement() {
@@ -23,8 +23,13 @@ public class EmployeeManagement extends SystemService {
     }
 
 
-    //region implement method
+    //region base method
     //find employee by id
+
+    public List<Employee> getEmployeeList() {
+        return employeeList;
+    }
+
     public Employee findById(String id) {
         for (Employee employee : EmployeeManagement.employeeList) {
             if (employee.getId().equals(id)) {
@@ -140,12 +145,13 @@ public class EmployeeManagement extends SystemService {
         System.out.print("Nhap email nhan vien: ");
         employee.setEmail(sc.nextLine());
         System.out.print("Nhap luong nhan vien: ");
-        employee.setSalary(sc.nextLine());
+        String salary = sc.nextLine();
         //validate salary
-        while (!isNumber(employee.getSalary())) {
+        while (!isNumber(salary)) {
             System.out.println("|| Luong phai la so , vui long nhap lai ");
-            employee.setSalary(sc.nextLine());
+            salary = sc.nextLine();
         }
+        employee.setSalary(Integer.parseInt(salary));
         System.out.print("Nhap chuc vu nhan vien: ");
         employee.setPermission(sc.nextLine());
         EmployeeManagement.employeeList.add(employee);
@@ -157,8 +163,8 @@ public class EmployeeManagement extends SystemService {
         System.out.println("||==================  Danh sach nhan vien  ===================||");
         for (Employee employee : employeeList) {
             this.PrintEmployee(employee);
-            System.out.println("||===========================================================||");
         }
+        System.out.println("||============================================================||");
     }
 
     //edit employee
@@ -210,11 +216,12 @@ public class EmployeeManagement extends SystemService {
                         break;
                     case "6":
                         System.out.println("Nhap luong nhan vien moi: ");
-                        employee.setSalary(sc.nextLine());
-                        while (!isNumber(employee.getSalary())) {
+                        String salary = sc.nextLine();
+                        while (!isNumber(salary)) {
                             System.out.println("|| Luong phai la so , vui long nhap lai ");
-                            employee.setSalary(sc.nextLine());
+                            salary = sc.nextLine();
                         }
+                        employee.setSalary(Integer.parseInt(salary));
                         break;
                     case "7":
                         System.out.println("Nhap phong ban nhan vien moi: ");
@@ -293,8 +300,8 @@ public class EmployeeManagement extends SystemService {
                         System.out.println("||==================  Danh sach nhan vien  ===================||");
                         for (Employee employee1 : employeeList) {
                             this.PrintEmployee(employee1);
-                            System.out.println("||============================================================||");
                         }
+                        System.out.println("||============================================================||");
                     }
                 }
                 case "3" -> {
@@ -307,8 +314,8 @@ public class EmployeeManagement extends SystemService {
                         System.out.println("||==================  Danh sach nhan vien  ===================||");
                         for (Employee employee : employeeList) {
                             this.PrintEmployee(employee);
-                            System.out.println("||============================================================||");
                         }
+                        System.out.println("||============================================================||");
                     }
                 }
                 case "4" -> {
@@ -321,8 +328,8 @@ public class EmployeeManagement extends SystemService {
                         System.out.println("||==================  Danh sach nhan vien  ===================||");
                         for (Employee employee : employeeList) {
                             this.PrintEmployee(employee);
-                            System.out.println("||============================================================||");
                         }
+                        System.out.println("||============================================================||");
                     }
                 }
                 case "0" -> System.out.println("Thoat chuc nang tim kiem");
@@ -349,7 +356,7 @@ public class EmployeeManagement extends SystemService {
                 fileWriter.append(DELIMITER);
                 fileWriter.append(employee.getEmail());
                 fileWriter.append(DELIMITER);
-                fileWriter.append(employee.getSalary());
+                fileWriter.append(String.valueOf(employee.getSalary()));
                 fileWriter.append(DELIMITER);
                 fileWriter.append(employee.getDepartmentId());
                 fileWriter.append(DELIMITER);
@@ -378,7 +385,7 @@ public class EmployeeManagement extends SystemService {
                 employee.setGender(arr[3]);
                 employee.setPhone(arr[4]);
                 employee.setEmail(arr[5]);
-                employee.setSalary(arr[6]);
+                employee.setSalary(Integer.parseInt(arr[6]));
                 employee.setDepartmentId(arr[7]);
                 employee.setPermission(arr[8]);
                 employeeList.add(employee);
@@ -393,6 +400,13 @@ public class EmployeeManagement extends SystemService {
 
     //to print  employee view
     private void PrintEmployee(Employee employee) {
+        Department department = departmentManagement.findById(employee.getDepartmentId());
+        if (department == null) {
+            System.out.println(" Ma nhan vien :" + employee.getId() + " Phong ban nhan vien nay khong ton tai");
+            return;
+        }
+        String departmentName = department.getName();
+        System.out.println("==============================================");
         System.out.println("Ma nhan vien: " + employee.getId());
         System.out.println("Ten nhan vien: " + employee.getName());
         System.out.println("Tuoi: " + employee.getAge());
@@ -400,8 +414,9 @@ public class EmployeeManagement extends SystemService {
         System.out.println("So dien thoai: " + employee.getPhone());
         System.out.println("Email: " + employee.getEmail());
         System.out.println("Luong: " + employee.getSalary());
-        System.out.println("Phong ban: " + employee.getDepartmentId());
+        System.out.println("Phong ban: " + departmentName);
         System.out.println("Chuc vu: " + employee.getPermission());
+        System.out.println("==============================================");
     }
 
 }

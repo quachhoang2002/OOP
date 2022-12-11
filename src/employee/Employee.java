@@ -8,7 +8,7 @@ public class Employee   {
     private String gender;
     private String phone;
     private String email;
-    private String salary;
+    private int salary;
     private String departmentId;
     private String permission;
 
@@ -21,12 +21,12 @@ public class Employee   {
         this.gender = "";
         this.phone = "";
         this.email = "";
-        this.salary = "";
+        this.salary = 0;
         this.departmentId = "";
         this.permission = "";
     }
 
-    public Employee(String id, String name, String age, String gender, String phone, String email, String salary, String departmentId, String permission) {
+    public Employee(String id, String name, String age, String gender, String phone, String email, int salary, String departmentId, String permission) {
         //constructor
         this.id = id;
         this.name = name;
@@ -97,11 +97,11 @@ public class Employee   {
         this.email = email;
     }
 
-    public String getSalary() {
+    public int getSalary() {
         return salary;
     }
 
-    public void setSalary(String salary) {
+    public void setSalary(int salary) {
         this.salary = salary;
     }
 

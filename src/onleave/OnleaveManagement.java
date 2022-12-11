@@ -1,7 +1,9 @@
 package onleave;
 
 import base.SystemService;
+import employee.Employee;
 import employee.EmployeeManagement;
+import shift.Shift;
 import shift.ShiftManagement;
 
 import java.io.BufferedReader;
@@ -23,6 +25,42 @@ public class OnleaveManagement extends SystemService {
         shiftManagement = new ShiftManagement();
         this.readFile();
     }
+
+    //region base method
+    public List<Onleave> getOnleaveList() {
+        return onleaveList;
+    }
+
+    public Onleave findById(String id) {
+        for (Onleave onleave : OnleaveManagement.onleaveList) {
+            if (onleave.getId().equals(id)) {
+                return onleave;
+            }
+        }
+        return null;
+    }
+
+    public List<Onleave> findByEmployeeId(String employeeId) {
+        List<Onleave> onleaveList = new ArrayList<>();
+        for (Onleave onleave : OnleaveManagement.onleaveList) {
+            if (onleave.getEmployeeId().equals(employeeId)) {
+                onleaveList.add(onleave);
+            }
+        }
+        return onleaveList;
+    }
+
+    public List<Onleave> findByDate(String date) {
+        List<Onleave> onleaveList = new ArrayList<>();
+        for (Onleave onleave : OnleaveManagement.onleaveList) {
+            if (onleave.getDate().equals(date)) {
+                onleaveList.add(onleave);
+            }
+        }
+        return onleaveList;
+    }
+    //endregion
+
 
     //ShowMenu
     public void showMenu() {
@@ -51,7 +89,7 @@ public class OnleaveManagement extends SystemService {
 
     //add
     public void add() {
-        String id = this.generateId("NP");
+        String id = SystemService.generateId("NP");
         System.out.println("Nhap ma nhan vien: ");
         String employeeId = sc.nextLine();
         //validate employeeId;
@@ -161,35 +199,67 @@ public class OnleaveManagement extends SystemService {
 
     //search
     public void search() {
-        System.out.println("Nhap ma nghi phep can tim: ");
-        String id = sc.nextLine();
-        Onleave onleave = this.findById(id);
-        if (onleave == null) {
-            System.out.println("Khong ton tai nghi phep nay");
-        } else {
-            System.out.println(onleave);
-        }
+        String select;
+        do {
+            System.out.println("||============== Tim kiem nghi phep ==============||");
+            System.out.println("|| 1. Tim kiem theo ma nhan vien.                ||");
+            System.out.println("|| 2. Tim kiem theo ngay nghi phep.              ||");
+            System.out.println("|| 3. Tim kiem theo ma nghi phep.                ||");
+            System.out.println("|| 0. Thoat.                                     ||");
+            System.out.println("||===============================================||");
+            select = sc.nextLine();
+            switch (select) {
+                case "1" -> {
+                    System.out.println("Nhap ma nhan vien: ");
+                    String employeeId = sc.nextLine();
+                    List<Onleave> onleaveList = this.findByEmployeeId(employeeId);
+                    if (onleaveList.isEmpty()) {
+                        System.out.println("Khong tim thay nghi phep nao");
+                    } else {
+                        for (Onleave onleave : onleaveList) {
+                            printOnleave(onleave);
+                        }
+                    }
+                }
+                case "2" -> {
+                    String date = "";
+                    try {
+                        date = this.dateInput();
+                    } catch (Exception e) {
+                        System.out.println("Nhap sai dinh dang ngay");
+                        return;
+                    }
+                    List<Onleave> onleaveList = this.findByDate(date);
+                    if (onleaveList.isEmpty()) {
+                        System.out.println("Khong tim thay nghi phep nao");
+                    } else {
+                        for (Onleave onleave : onleaveList) {
+                            printOnleave(onleave);
+                        }
+                    }
+                }
+                case "3" -> {
+                    System.out.println("Nhap ma nghi phep: ");
+                    String id = sc.nextLine();
+                    Onleave onleave = this.findById(id);
+                    if (onleave == null) {
+                        System.out.println("Khong ton tai nghi phep nay");
+                    } else {
+                        printOnleave(onleave);
+                    }
+                }
+                default -> System.out.println("Nhap sai");
+            }
+        } while (!select.equals("0"));
     }
-
 
     //showList
     public void show() {
         System.out.println("||================= Danh sach nghi phep =================||");
-        System.out.println("|| Ma nghi phep | Ma nhan vien | Ma ca | Ngay nghi phep ||");
         for (Onleave onleave : OnleaveManagement.onleaveList) {
-            System.out.println("|| " + onleave.getId() + " | " + onleave.getEmployeeId() + " | " + onleave.getShiftId() + " | " + onleave.getDate() + " ||");
+            printOnleave(onleave);
         }
         System.out.println("||======================================================||");
-    }
-
-    //findById
-    public Onleave findById(String id) {
-        for (Onleave onleave : OnleaveManagement.onleaveList) {
-            if (onleave.getId().equals(id)) {
-                return onleave;
-            }
-        }
-        return null;
     }
 
     private boolean checkDate(String date) {
@@ -288,6 +358,24 @@ public class OnleaveManagement extends SystemService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void printOnleave(Onleave onleave) {
+        Employee employee = employeeManagement.findById(onleave.getEmployeeId());
+        Shift shift = shiftManagement.findById(onleave.getShiftId());
+        if (employee == null || shift == null) {
+            System.out.println("Ma nghi phep :" + onleave.getId() + " khong ton tai nhan vien hoac ca lam viec");
+            return;
+        }
+        String employeeName = employee.getName();
+        String shiftName = shift.getName();
+        System.out.println("||=====================================||");
+        System.out.println("|| Ma nghi phep: " + onleave.getId());
+        System.out.println("|| Ten nhan vien: " + employeeName);
+        System.out.println("|| Ten ca lam viec: " + shiftName);
+        System.out.println("|| Ngay nghi phep: " + onleave.getDate());
+        System.out.println("|| Ly do nghi phep: " + onleave.getReason());
+        System.out.println("||=======================================||");
     }
 
 }

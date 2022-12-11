@@ -1,20 +1,20 @@
 package base;
 
 public interface ISystem {
-    public void add();
+    void add();
 
-    public void show();
+    void show();
 
-    public void delete();
+    void delete();
 
-    public void edit();
+    void edit();
 
-    public void search();
+    void search();
 
-    public void showMenu();
+    void showMenu();
 
-    public void writeFile();
+    void writeFile();
 
-    public void readFile();
+    void readFile();
 
 }

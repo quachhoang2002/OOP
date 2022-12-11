@@ -19,33 +19,32 @@ public class Main {
             System.out.println("||0. Thoat chuong trinh                      ||");
             select = sc.nextLine();
             switch (select) {
-                case "1":
+                case "1" -> {
                     ISystem departmentManagement = factory.getInstance("department");
                     departmentManagement.showMenu();
-                    break;
-                case "2":
+                }
+                case "2" -> {
                     ISystem employeeManagement = factory.getInstance("employee");
                     employeeManagement.showMenu();
-                    break;
-                case "3":
+                }
+                case "3" -> {
                     ISystem shiftManagement = factory.getInstance("shift");
                     shiftManagement.showMenu();
-                    break;
-                case "4":
+                }
+                case "4" -> {
                     ISystem timeKeepingManagement = factory.getInstance("timekeeping");
                     timeKeepingManagement.showMenu();
-                    break;
-                case "5":
+                }
+                case "5" -> {
                     ISystem onleaveManagement = factory.getInstance("onleave");
                     onleaveManagement.showMenu();
-                    break;
-                case "6":
-                    break;
-                case "0":
-                    System.out.println("0=BAN DA THOAT CHUONG TRINH");
-                    break;
-                default:
-                    System.out.println("Nhap sai lua chon, xin nhap lai !!!");
+                }
+                case "6" -> {
+                    ISystem payrollManagement = factory.getInstance("payroll");
+                    payrollManagement.showMenu();
+                }
+                case "0" -> System.out.println("0=BAN DA THOAT CHUONG TRINH");
+                default -> System.out.println("Nhap sai lua chon, xin nhap lai !!!");
             }
         } while (!select.equals("0"));
     }

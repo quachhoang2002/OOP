@@ -234,8 +234,10 @@ public class DepartmentManagement extends SystemService {
     //endregion
 
     private void printDepartment(Department department) {
+        System.out.println("==============================================");
         System.out.println("Ma phong: " + department.getId());
         System.out.println("Ten phong: " + department.getName());
         System.out.println("So luong nhan vien: " + department.getQuantity());
+        System.out.println("==============================================");
     }
 }

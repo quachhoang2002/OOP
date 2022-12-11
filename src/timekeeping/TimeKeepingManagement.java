@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class TimeKeepingManagement extends SystemService {
@@ -42,7 +43,7 @@ public class TimeKeepingManagement extends SystemService {
     }
 
     public List<TimeKeeping> getTimeKeepingList() {
-        return null;
+        return TimeKeepingManagement.timeKeepingList;
     }
 
     public TimeKeeping findByDate(String date) {
@@ -122,7 +123,7 @@ public class TimeKeepingManagement extends SystemService {
         }
         //validate check in time
         String startTime = shift.findById(shiftId).getStartTime();
-        if (!validateCheckInTime(checkIn,startTime)){
+        if (!validateCheckInTime(checkIn, startTime)) {
             System.out.println("Thoi gian check in khong hop le");
             return;
         }
@@ -135,7 +136,7 @@ public class TimeKeepingManagement extends SystemService {
             }
         }
         //get date
-        TimeKeeping timeKeeping = new TimeKeeping(this.generateId("CC"), employeeId, shiftId, currentDate, checkIn, "0",0);
+        TimeKeeping timeKeeping = new TimeKeeping(SystemService.generateId("CC"), employeeId, shiftId, currentDate, checkIn, "0", 0);
         System.out.println("Day la ma cham cong cua ban: " + timeKeeping.getId());
         timeKeepingList.add(timeKeeping);
         //write to file
@@ -173,11 +174,13 @@ public class TimeKeepingManagement extends SystemService {
 
     //show time keeping
     public void show() {
-        System.out.println("||=============Danh sach cham cong============||");
+        System.out.println("||=================== Danh sach cham cong ===================||");
+        //sort revert time keeping list by working time
+        //timeKeepingList.sort((o1, o2) -> o2.getTimeWorking() - o1.getTimeWorking());
         for (TimeKeeping timeKeeping : timeKeepingList) {
             this.printTimeKeeping(timeKeeping);
-            System.out.println("==============================================");
         }
+        System.out.println("========================================================");
     }
 
     //validate checkin time
@@ -249,7 +252,7 @@ public class TimeKeepingManagement extends SystemService {
             while ((line = bufferedReader.readLine()) != null && !line.isEmpty()) {
                 String[] timeKeepingArray = line.split(SPLIT_PATTERN);
                 TimeKeeping timeKeeping = new TimeKeeping(timeKeepingArray[0], timeKeepingArray[1], timeKeepingArray[2],
-                        timeKeepingArray[3], timeKeepingArray[4], timeKeepingArray[5],Integer.parseInt((timeKeepingArray[6])));
+                        timeKeepingArray[3], timeKeepingArray[4], timeKeepingArray[5], Integer.parseInt((timeKeepingArray[6])));
                 timeKeepingList.add(timeKeeping);
             }
             bufferedReader.close();
@@ -261,14 +264,21 @@ public class TimeKeepingManagement extends SystemService {
     }
 
     private void printTimeKeeping(TimeKeeping timeKeeping) {
+        Employee employee = this.employeeManagement.findById(timeKeeping.getEmployeeId());
+        Shift shift = this.shiftManagement.findById(timeKeeping.getShiftId());
+        if (employee == null || shift == null) {
+            System.out.println("Ma cham cong " + timeKeeping.getId() + "Khong tim thay nhan vien hoac ca lam viec");
+            return;
+        }
         //menu check in and check out
-        System.out.println("||=================Thong tin cham cong=================||");
+        System.out.println("==============================================");
         System.out.println("||Ma cham cong: " + timeKeeping.getId());
-        System.out.println("||Ma nhan vien: " + timeKeeping.getEmployeeId());
-        System.out.println("||Ma ca lam viec: " + timeKeeping.getShiftId());
+        System.out.println("||Ten nhan vien: " + employee.getName());
+        System.out.println("||Ten ca lam viec: " + shift.getName());
         System.out.println("||Ngay cham cong: " + timeKeeping.getDate());
         System.out.println("||Gio vao: " + timeKeeping.getCheckIn());
         System.out.println("||Gio ra: " + timeKeeping.getCheckOut());
-        System.out.println("||=====================================================||");
+        System.out.println("||So phut lam viec: " + timeKeeping.getTimeWorking() + " phut");
+        System.out.println("==============================================");
     }
 }
