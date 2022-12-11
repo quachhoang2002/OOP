@@ -1,15 +1,6 @@
 package Payroll;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import base.SystemService;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-
 import employee.Employee;
 import employee.EmployeeManagement;
 import onleave.Onleave;
@@ -18,6 +9,13 @@ import shift.Shift;
 import shift.ShiftManagement;
 import timekeeping.TimeKeeping;
 import timekeeping.TimeKeepingManagement;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PayrollManagement extends SystemService {
     private static final String PATH_OF_FILE = "Payroll.txt";
@@ -29,13 +27,46 @@ public class PayrollManagement extends SystemService {
     protected ShiftManagement shiftManagement;
 
     public PayrollManagement() {
-        this.readFile();
+        if (payrollList.isEmpty()) {
+            readFile();
+        }
         this.onleaveManagement = new OnleaveManagement();
         this.employeeManagement = new EmployeeManagement();
         this.timeKeepingManagement = new TimeKeepingManagement();
         this.shiftManagement = new ShiftManagement();
     }
 
+    //region default method
+    public Payroll findPayrollById(String id) {
+        for (Payroll payroll : payrollList) {
+            if (payroll.getId().equals(id)) {
+                return payroll;
+            }
+        }
+        return null;
+    }
+
+    public List<Payroll> findPayrollByEmployeeId(String employeeId) {
+        List<Payroll> payrollList = new ArrayList<>();
+        for (Payroll payroll : PayrollManagement.payrollList) {
+            if (payroll.getEmployeeId().equals(employeeId)) {
+                payrollList.add(payroll);
+            }
+        }
+        return payrollList;
+    }
+
+    public List<Payroll> findByDate(String date) {
+        List<Payroll> payrollList = new ArrayList<>();
+        for (Payroll payroll : PayrollManagement.payrollList) {
+            if (payroll.getDate().equals(date)) {
+                payrollList.add(payroll);
+            }
+        }
+        return payrollList;
+    }
+
+    //endregion
     @Override
     public void add() {
         List<Employee> employeeList = employeeManagement.getEmployeeList();
@@ -47,17 +78,9 @@ public class PayrollManagement extends SystemService {
         }
         String date = "";
         try {
-            System.out.println("Chon Thang muon tinh luong: ");
-            String month = sc.nextLine();
-            if (Integer.parseInt(month) > 12 || Integer.parseInt(month) < 1) {
-                System.out.println("Thang khong hop le");
-                return;
-            }
-            System.out.println("Chon Nam muon tinh luong: ");
-            String year = sc.nextLine();
-            date = month + "-" + year;
+            date = this.inputDate();
         } catch (Exception e) {
-            System.out.println("Nhap sai dinh dang");
+            System.out.println("Thang khong hop le");
             return;
         }
         for (Employee employee : employeeList) {
@@ -81,16 +104,91 @@ public class PayrollManagement extends SystemService {
 
     @Override
     public void delete() {
-
+        System.out.println("Nhap id bang luong muon xoa: ");
+        String id = sc.nextLine();
+        Payroll payroll = this.findPayrollById(id);
+        if (payroll == null) {
+            System.out.println("Khong tim thay bang luong");
+            return;
+        }
+        payrollList.remove(payroll);
     }
 
     @Override
     public void edit() {
-
+        System.out.println("Nhap id bang luong muon sua: ");
+        String id = sc.nextLine();
+        Payroll payroll = this.findPayrollById(id);
+        if (payroll == null) {
+            System.out.println("Khong tim thay bang luong");
+            return;
+        }
+        System.out.println("Nhap tien luong moi: ");
+        float salary = Float.parseFloat(sc.nextLine());
+        payroll.setTotalSalary(salary);
+        this.writeFile();
     }
 
     @Override
     public void search() {
+        String select;
+        do {
+            System.out.println("||================= Tim kiem bang luong =================||");
+            System.out.println("|| 1. Tim kiem bang luong theo id                        ||");
+            System.out.println("|| 2. Tim kiem bang luong theo id nhan vien              ||");
+            System.out.println("|| 3. Tim kiem bang luong theo thang                     ||");
+            System.out.println("|| 0. Thoat                                              ||");
+            System.out.println("||=======================================================||");
+            System.out.println("Nhap lua chon: ");
+            select = sc.nextLine();
+            switch (select) {
+                case "1" -> {
+                    System.out.println("Nhap id bang luong muon tim kiem: ");
+                    String id = sc.nextLine();
+                    Payroll payroll = this.findPayrollById(id);
+                    if (payroll == null) {
+                        System.out.println("Khong tim thay bang luong");
+                        return;
+                    }
+                    this.printPay(payroll);
+                }
+                case "2" -> {
+                    System.out.println("Nhap id nhan vien: ");
+                    String employeeId = sc.nextLine();
+                    List<Payroll> payrollList = this.findPayrollByEmployeeId(employeeId);
+                    if (payrollList.size() == 0) {
+                        System.out.println("Khong tim thay bang luong");
+                        return;
+                    }
+                    System.out.println("||================= Bang luong =================||");
+                    for (Payroll payroll : payrollList) {
+                        this.printPay(payroll);
+                    }
+                    System.out.println("||=============================================||");
+                }
+                case "3" -> {
+                    String date;
+                    try {
+                        date = this.inputDate();
+                    } catch (Exception e) {
+                        System.out.println("Thang khong hop le");
+                        return;
+                    }
+                    List<Payroll> payrollList1 = this.findByDate(date);
+                    if (payrollList1.size() == 0) {
+                        System.out.println("Khong tim thay bang luong");
+                        return;
+                    }
+                    System.out.println("||================= Bang luong =================||");
+                    for (Payroll payroll : payrollList1) {
+                        this.printPay(payroll);
+                    }
+                    System.out.println("||=============================================||");
+                }
+                case "0" -> System.out.println("Thoat");
+                default -> System.out.println("Lua chon khong hop le");
+            }
+        } while (!select.equals("0"));
 
     }
 
@@ -142,9 +240,22 @@ public class PayrollManagement extends SystemService {
         return totalSalary;
     }
 
+    private String inputDate() {
+        String date;
+        System.out.println("Chon Thang muon tinh luong: ");
+        String month = sc.nextLine();
+        if (Integer.parseInt(month) > 12 || Integer.parseInt(month) < 1) {
+            throw new RuntimeException();
+        }
+        System.out.println("Chon Nam muon tinh luong: ");
+        String year = sc.nextLine();
+        date = month + "-" + year;
+        return date;
+    }
+
     private void printPay(Payroll payroll) {
         Employee employee = employeeManagement.findById(payroll.getEmployeeId());
-        if (employee == null){
+        if (employee == null) {
             System.out.println("Ma phieu luong : " + payroll.getId() + " khong co nhan vien");
             return;
         }

@@ -13,7 +13,9 @@ public class ShiftManagement extends SystemService {
     protected static List<Shift> shiftList = new ArrayList<>();
 
     public ShiftManagement() {
-        this.readFile();
+        if (shiftList.isEmpty()) {
+            readFile();
+        }
     }
 
 

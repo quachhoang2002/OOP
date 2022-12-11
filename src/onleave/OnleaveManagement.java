@@ -23,7 +23,9 @@ public class OnleaveManagement extends SystemService {
     public OnleaveManagement() {
         employeeManagement = new EmployeeManagement();
         shiftManagement = new ShiftManagement();
-        this.readFile();
+        if (onleaveList.isEmpty()) {
+            readFile();
+        }
     }
 
     //region base method

@@ -43,7 +43,7 @@ public class Main {
                     ISystem payrollManagement = factory.getInstance("payroll");
                     payrollManagement.showMenu();
                 }
-                case "0" -> System.out.println("0=BAN DA THOAT CHUONG TRINH");
+                case "0" -> System.out.println("BAN DA THOAT CHUONG TRINH");
                 default -> System.out.println("Nhap sai lua chon, xin nhap lai !!!");
             }
         } while (!select.equals("0"));

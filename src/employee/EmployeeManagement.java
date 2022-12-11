@@ -18,7 +18,9 @@ public class EmployeeManagement extends SystemService {
 
     //constructor
     public EmployeeManagement() {
-        this.readFile();
+        if (employeeList.isEmpty()) {
+            readFile();
+        }
         this.departmentManagement = new DepartmentManagement();
     }
 
@@ -117,7 +119,6 @@ public class EmployeeManagement extends SystemService {
         Employee employee = new Employee();
         System.out.println("||==================  Them nhan vien  ===================||");
         //chosen department
-        departmentManagement.show();
         System.out.println("|| Chon phong bang: ");
         String departmentId = sc.nextLine();
         //validate department
@@ -399,6 +400,7 @@ public class EmployeeManagement extends SystemService {
     //endregion
 
     //to print  employee view
+
     private void PrintEmployee(Employee employee) {
         Department department = departmentManagement.findById(employee.getDepartmentId());
         if (department == null) {

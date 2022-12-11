@@ -25,7 +25,9 @@ public class TimeKeepingManagement extends SystemService {
 
 
     public TimeKeepingManagement() {
-        this.readFile();
+        if (timeKeepingList.isEmpty()) {
+            readFile();
+        }
         this.employeeManagement = new EmployeeManagement();
         this.shiftManagement = new ShiftManagement();
     }
