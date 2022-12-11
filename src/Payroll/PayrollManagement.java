@@ -80,8 +80,25 @@ public class PayrollManagement extends SystemService {
         try {
             date = this.inputDate();
         } catch (Exception e) {
-            System.out.println("Thang khong hop le");
+            System.out.println("Nhap sai dinh dang");
             return;
+        }
+        if (findByDate(date).size() > 0) {
+            System.out.println("Luong da duoc tinh cho thang nay ban muon tinh lai khong? (Y/N)");
+            String select;
+            do {
+                select = sc.nextLine();
+                if (select.equals("Y")) {
+                    for (Payroll payroll : findByDate(date)) {
+                        payrollList.remove(payroll);
+                    }
+                    break;
+                } else if (select.equals("N")) {
+                    return;
+                } else {
+                    System.out.println("Nhap sai, vui long nhap lai");
+                }
+            } while (true);
         }
         for (Employee employee : employeeList) {
             float totalSalary = 0;
@@ -146,10 +163,6 @@ public class PayrollManagement extends SystemService {
                     System.out.println("Nhap id bang luong muon tim kiem: ");
                     String id = sc.nextLine();
                     Payroll payroll = this.findPayrollById(id);
-                    if (payroll == null) {
-                        System.out.println("Khong tim thay bang luong");
-                        return;
-                    }
                     this.printPay(payroll);
                 }
                 case "2" -> {
@@ -158,32 +171,26 @@ public class PayrollManagement extends SystemService {
                     List<Payroll> payrollList = this.findPayrollByEmployeeId(employeeId);
                     if (payrollList.size() == 0) {
                         System.out.println("Khong tim thay bang luong");
-                        return;
                     }
-                    System.out.println("||================= Bang luong =================||");
                     for (Payroll payroll : payrollList) {
                         this.printPay(payroll);
                     }
-                    System.out.println("||=============================================||");
                 }
                 case "3" -> {
                     String date;
                     try {
                         date = this.inputDate();
                     } catch (Exception e) {
-                        System.out.println("Thang khong hop le");
-                        return;
+                        System.out.println("Dinh dang khong hop le");
+                        break;
                     }
                     List<Payroll> payrollList1 = this.findByDate(date);
                     if (payrollList1.size() == 0) {
                         System.out.println("Khong tim thay bang luong");
-                        return;
                     }
-                    System.out.println("||================= Bang luong =================||");
                     for (Payroll payroll : payrollList1) {
                         this.printPay(payroll);
                     }
-                    System.out.println("||=============================================||");
                 }
                 case "0" -> System.out.println("Thoat");
                 default -> System.out.println("Lua chon khong hop le");
@@ -244,16 +251,22 @@ public class PayrollManagement extends SystemService {
         String date;
         System.out.println("Chon Thang muon tinh luong: ");
         String month = sc.nextLine();
-        if (Integer.parseInt(month) > 12 || Integer.parseInt(month) < 1) {
-            throw new RuntimeException();
+        while (Integer.parseInt(month) < 1 || Integer.parseInt(month) > 12) {
+            System.out.println("Thang khong hop le, moi nhap lai: ");
+            month = sc.nextLine();
         }
         System.out.println("Chon Nam muon tinh luong: ");
+
         String year = sc.nextLine();
         date = month + "-" + year;
         return date;
     }
 
     private void printPay(Payroll payroll) {
+        if (payroll == null) {
+            System.out.println("Khong tim thay bang luong");
+            return;
+        }
         Employee employee = employeeManagement.findById(payroll.getEmployeeId());
         if (employee == null) {
             System.out.println("Ma phieu luong : " + payroll.getId() + " khong co nhan vien");

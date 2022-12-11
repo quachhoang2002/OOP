@@ -48,34 +48,39 @@ public class TimeKeepingManagement extends SystemService {
         return TimeKeepingManagement.timeKeepingList;
     }
 
-    public TimeKeeping findByDate(String date) {
-        for (TimeKeeping timeKeeping : timeKeepingList) {
+    public List<TimeKeeping> findByDate(String date) {
+        List<TimeKeeping> timeKeepingList = new ArrayList<>();
+        for (TimeKeeping timeKeeping : TimeKeepingManagement.timeKeepingList) {
             if (timeKeeping.getDate().equals(date)) {
-                return timeKeeping;
+                timeKeepingList.add(timeKeeping);
             }
         }
-        return null;
+        return timeKeepingList;
     }
 
-    public TimeKeeping findByEmployeeId(String employeeId) {
-        for (TimeKeeping timeKeeping : timeKeepingList) {
+    public List<TimeKeeping> findByEmployeeId(String employeeId) {
+        List<TimeKeeping> timeKeepings = new ArrayList<>();
+        for (TimeKeeping timeKeeping : TimeKeepingManagement.timeKeepingList) {
             if (timeKeeping.getEmployeeId().equals(employeeId)) {
-                return timeKeeping;
+                timeKeepings.add(timeKeeping);
             }
         }
-        return null;
+        return timeKeepings;
     }
 
-    public TimeKeeping findByShiftId(String shiftId) {
-        for (TimeKeeping timeKeeping : timeKeepingList) {
+    public List<TimeKeeping> findByShiftId(String shiftId) {
+        List<TimeKeeping> timeKeepings = new ArrayList<>();
+        for (TimeKeeping timeKeeping : TimeKeepingManagement.timeKeepingList) {
             if (timeKeeping.getShiftId().equals(shiftId)) {
-                return timeKeeping;
+                timeKeepings.add(timeKeeping);
             }
         }
-        return null;
+        return timeKeepings;
     }
+
 
     //menu
+
     public void showMenu() {
         String select;
         do {
@@ -83,6 +88,9 @@ public class TimeKeepingManagement extends SystemService {
             System.out.println("||1. Check In                               ||");
             System.out.println("||2. Check Out                              ||");
             System.out.println("||3. Xem cham cong                          ||");
+            System.out.println("||4. Sua thoi gian cham cong                ||");
+            System.out.println("||5. Xoa cham cong                          ||");
+            System.out.println("||6. Tim thong tin cham cong                ||");
             System.out.println("||0. Thoat                                  ||");
             System.out.println("||===========================================||");
             select = sc.nextLine();
@@ -90,6 +98,9 @@ public class TimeKeepingManagement extends SystemService {
                 case "1" -> this.checkIn();
                 case "2" -> this.checkOut();
                 case "3" -> this.show();
+                case "4" -> this.edit();
+                case "5" -> this.delete();
+                case "6" -> this.search();
                 case "0" -> System.out.println("Thoat chuong trinh");
                 default -> System.out.println("Nhap sai, moi nhap lai");
             }
@@ -125,7 +136,7 @@ public class TimeKeepingManagement extends SystemService {
         }
         //validate check in time
         String startTime = shift.findById(shiftId).getStartTime();
-        if (!validateCheckInTime(checkIn, startTime)) {
+        if (!isGreaterCheckTime(checkIn, startTime)) {
             System.out.println("Thoi gian check in khong hop le");
             return;
         }
@@ -136,6 +147,11 @@ public class TimeKeepingManagement extends SystemService {
                 System.out.println("Nhan vien da check in trong ngay nay");
                 return;
             }
+        }
+        String endTime = shift.findById(shiftId).getEndTime();
+        if (isGreaterCheckTime(checkIn, endTime)) {
+            System.out.println("Nhan vien da check in qua gio");
+            return;
         }
         //get date
         TimeKeeping timeKeeping = new TimeKeeping(SystemService.generateId("CC"), employeeId, shiftId, currentDate, checkIn, "0", 0);
@@ -164,7 +180,11 @@ public class TimeKeepingManagement extends SystemService {
         }
         //set checkout to end time of shift if checkout time is greater than end time of shift
         Shift shift = this.shiftManagement.findById(timeKeeping.getShiftId());
-        if (checkOut.compareTo(shift.getEndTime()) > 0) {
+        if (shift == null) {
+            System.out.println("Khong tim thay ca lam viec");
+            return;
+        }
+        if (isGreaterCheckTime(checkOut, shift.getEndTime())) {
             checkOut = shift.getEndTime();
         }
         //update check out
@@ -186,9 +206,15 @@ public class TimeKeepingManagement extends SystemService {
     }
 
     //validate checkin time
-    public boolean validateCheckInTime(String checkIn, String startTime) {
-        String[] checkInTime = checkIn.split(":");
-        String[] startTimeTime = startTime.split(":");
+
+    /**
+     * @param checkTime
+     * @param time
+     * @return true if check time is greater than  time
+     */
+    public boolean isGreaterCheckTime(String checkTime, String time) {
+        String[] checkInTime = checkTime.split(":");
+        String[] startTimeTime = time.split(":");
         if (Integer.parseInt(checkInTime[0]) < Integer.parseInt(startTimeTime[0])) {
             return false;
         } else if (Integer.parseInt(checkInTime[0]) == Integer.parseInt(startTimeTime[0])) {
@@ -206,13 +232,140 @@ public class TimeKeepingManagement extends SystemService {
 
     //edit
     public void edit() {
+        System.out.println("Nhap ma cham cong can sua: ");
+        String id = sc.nextLine();
+        TimeKeeping timeKeeping = this.findById(id);
+        if (timeKeeping == null) {
+            System.out.println("Ma cham cong khong ton tai");
+            return;
+        }
+        String select;
+        do {
+            System.out.println("||=================== Sua thong tin cham cong ===================||");
+            System.out.println("||1. Sua thoi gian check in                                    ||");
+            System.out.println("||2. Sua thoi gian check out                                   ||");
+            System.out.println("||0. Thoat                                                     ||");
+            System.out.println("||==============================================================||");
+            select = sc.nextLine();
+            switch (select) {
+                case "1" -> {
+                    System.out.println("Nhap thoi gian check in: ");
+                    String checkIn = sc.nextLine();
+                    if (!validateStartEndTime(checkIn, timeKeeping.getCheckOut())) {
+                        System.out.println("Thoi gian check in khong hop le");
+                        break;
+                    }
+                    timeKeeping.setCheckIn(checkIn);
+                    this.writeFile();
+                }
+                case "2" -> {
+                    System.out.println("Nhap thoi gian check out: ");
+                    String checkOut = sc.nextLine();
+                    if (!validateStartEndTime(timeKeeping.getCheckIn(), checkOut)) {
+                        System.out.println("Thoi gian check out khong hop le");
+                        break;
+                    }
+                    Shift shift = this.shiftManagement.findById(timeKeeping.getShiftId());
+                    if (shift == null) {
+                        System.out.println("Khong tim thay ca lam viec");
+                        break;
+                    }
+                    if (isGreaterCheckTime(checkOut, shift.getEndTime())) {
+                        checkOut = shift.getEndTime();
+                    }
+                    timeKeeping.setCheckOut(checkOut);
+                    this.writeFile();
+                }
+                case "0" -> System.out.println("Thoat chuc nang sua");
+                default -> System.out.println("Nhap sai, moi nhap lai");
+            }
+        } while (!select.equals("0"));
     }
 
     //delete
     public void delete() {
+        System.out.println("Nhap ma cham cong can xoa: ");
+        String id = sc.nextLine();
+        TimeKeeping timeKeeping = this.findById(id);
+        if (timeKeeping == null) {
+            System.out.println("Ma cham cong khong ton tai");
+            return;
+        }
+        timeKeepingList.remove(timeKeeping);
+        this.writeFile();
     }
 
     public void search() {
+        String select;
+        do {
+            System.out.println("||=================== Tim kiem cham cong ===================||");
+            System.out.println("||1. Tim kiem theo ma cham cong                             ||");
+            System.out.println("||2. Tim kiem theo ma nhan vien                             ||");
+            System.out.println("||3. Tim kiem theo ma ca lam viec                           ||");
+            System.out.println("||4. Tim kiem theo ngay cham cong                           ||");
+            System.out.println("||0. Thoat                                                  ||");
+            System.out.println("||==========================================================||");
+            select = sc.nextLine();
+            switch (select) {
+                case "1" -> {
+                    System.out.println("Nhap ma cham cong can tim kiem: ");
+                    String id = sc.nextLine();
+                    TimeKeeping timeKeeping = this.findById(id);
+                    this.printTimeKeeping(timeKeeping);
+                }
+                case "2" -> {
+                    System.out.println("Nhap ma nhan vien can tim kiem: ");
+                    String employeeId = sc.nextLine();
+                    List<TimeKeeping> timeKeepings = this.findByEmployeeId(employeeId);
+                    if (timeKeepings.size() == 0) {
+                        System.out.println("Khong tim thay thong tin cham cong");
+                    }
+                    for (TimeKeeping timeKeeping : timeKeepings) {
+                        this.printTimeKeeping(timeKeeping);
+                    }
+                }
+                case "3" -> {
+                    System.out.println("Nhap ma ca lam viec can tim kiem: ");
+                    String shiftId = sc.nextLine();
+                    List<TimeKeeping> timeKeepings = this.findByShiftId(shiftId);
+                    if (timeKeepings.size() == 0) {
+                        System.out.println("Khong tim thay thong tin cham cong");
+                    }
+                    for (TimeKeeping timeKeeping : timeKeepings) {
+                        this.printTimeKeeping(timeKeeping);
+                    }
+                }
+                case "4" -> {
+                    String date;
+                    try {
+                        System.out.println("Nhap ngay can tim kiem: ");
+                        String day = sc.nextLine();
+                        System.out.println("Nhap thang can tim kiem: ");
+                        String month = sc.nextLine();
+                        System.out.println("Nhap nam can tim kiem: ");
+                        String year = sc.nextLine();
+                        date = day + "-" + month + "-" + year;
+                        if (!checkDate(date)) {
+                            System.out.println("Ngay thang nam khong hop le");
+                            break;
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Nhap sai dinh dang ngay thang");
+                        break;
+                    }
+                    List<TimeKeeping> timeKeepings = this.findByDate(date);
+                    if (timeKeepings.size() == 0) {
+                        System.out.println("Khong tim thay thong tin cham cong");
+                    }
+                    for (TimeKeeping timeKeeping : timeKeepings) {
+                        this.printTimeKeeping(timeKeeping);
+                    }
+                }
+                case "0" -> System.out.println("Thoat chuc nang tim kiem");
+                default -> System.out.println("Nhap sai, moi nhap lai");
+
+            }
+        } while (!select.equals("0"));
     }
 
 
@@ -265,7 +418,12 @@ public class TimeKeepingManagement extends SystemService {
 
     }
 
+
     private void printTimeKeeping(TimeKeeping timeKeeping) {
+        if (timeKeeping == null) {
+            System.out.println("Khong tim thay cham cong");
+            return;
+        }
         Employee employee = this.employeeManagement.findById(timeKeeping.getEmployeeId());
         Shift shift = this.shiftManagement.findById(timeKeeping.getShiftId());
         if (employee == null || shift == null) {

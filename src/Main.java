@@ -1,5 +1,6 @@
 import base.ISystem;
 import base.Factory;
+import statistical.Statistical;
 
 import java.util.Scanner;
 
@@ -15,7 +16,8 @@ public class Main {
             System.out.println("||3. Ca Lam                                  ||");
             System.out.println("||4. Cham cong                               ||");
             System.out.println("||5. Nghi Phep                               ||");
-            System.out.println("||6. Thong ke luong                          ||");
+            System.out.println("||6. Luong                                   ||");
+            System.out.println("||7. Thong Ke                                ||");
             System.out.println("||0. Thoat chuong trinh                      ||");
             select = sc.nextLine();
             switch (select) {
@@ -42,6 +44,10 @@ public class Main {
                 case "6" -> {
                     ISystem payrollManagement = factory.getInstance("payroll");
                     payrollManagement.showMenu();
+                }
+                case "7" -> {
+                    Statistical statistical = new Statistical();
+                    statistical.showMenu();
                 }
                 case "0" -> System.out.println("BAN DA THOAT CHUONG TRINH");
                 default -> System.out.println("Nhap sai lua chon, xin nhap lai !!!");

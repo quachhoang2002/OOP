@@ -26,13 +26,14 @@ public class DepartmentManagement extends SystemService {
         return null;
     }
 
-    public Department findByName(String name) {
-        for (Department department : departmentList) {
+    public List<Department> findByName(String name) {
+        List<Department> departmentList = new ArrayList<>();
+        for (Department department : DepartmentManagement.departmentList) {
             if (department.getName().equals(name)) {
-                return department;
+                departmentList.add(department);
             }
         }
-        return null;
+        return departmentList;
     }
     //endregion
 
@@ -169,9 +170,7 @@ public class DepartmentManagement extends SystemService {
                     String id = sc.nextLine();
                     Department department = findById(id);
                     if (department != null) {
-                        System.out.println("||================== Thong Tin Phong Ban ===================||");
                         this.printDepartment(department);
-                        System.out.println("============================================================");
                     } else {
                         System.out.println("Khong tim thay phong ban");
                     }
@@ -179,13 +178,12 @@ public class DepartmentManagement extends SystemService {
                 case "2" -> {
                     System.out.println("Nhap ten phong ban can tim: ");
                     String name = sc.nextLine();
-                    Department department1 = findByName(name);
-                    if (department1 != null) {
-                        System.out.println("||================== Thong Tin Phong Ban ===================||");
-                        this.printDepartment(department1);
-                        System.out.println("============================================================");
-                    } else {
+                    List<Department> departmentList = findByName(name);
+                    if (departmentList.size() == 0){
                         System.out.println("Khong tim thay phong ban");
+                    }
+                    for (Department department : departmentList) {
+                        this.printDepartment(department);
                     }
                 }
                 case "0" -> System.out.println("Thoat chuc nang tim phong ban");

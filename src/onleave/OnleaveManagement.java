@@ -264,45 +264,7 @@ public class OnleaveManagement extends SystemService {
         System.out.println("||======================================================||");
     }
 
-    private boolean checkDate(String date) {
-        String[] dateArr = date.split("-");
-        int day = Integer.parseInt(dateArr[0]);
-        int month = Integer.parseInt(dateArr[1]);
-        int year = Integer.parseInt(dateArr[2]);
-        switch (month) {
-            case 1:
-            case 3:
-            case 5:
-            case 7:
-            case 8:
-            case 10:
-            case 12:
-                if (day > 0 && day <= 31) {
-                    return true;
-                }
-                break;
-            case 4:
-            case 6:
-            case 9:
-            case 11:
-                if (day > 0 && day <= 30) {
-                    return true;
-                }
-                break;
-            case 2:
-                if (year % 4 == 0 && year % 100 != 0 || year % 400 == 0) {
-                    if (day > 0 && day <= 29) {
-                        return true;
-                    }
-                } else {
-                    if (day > 0 && day <= 28) {
-                        return true;
-                    }
-                }
-                break;
-        }
-        return false;
-    }
+  
 
     private String dateInput() {
         String date = "";

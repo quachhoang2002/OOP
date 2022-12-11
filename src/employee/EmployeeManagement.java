@@ -286,9 +286,7 @@ public class EmployeeManagement extends SystemService {
                     if (employee == null) {
                         System.out.println("Khong tim thay nhan vien");
                     } else {
-                        System.out.println("||==================  Thong tin nhan vien  ===================||");
                         this.PrintEmployee(employee);
-                        System.out.println("||============================================================||");
                     }
                 }
                 case "2" -> {
@@ -298,11 +296,9 @@ public class EmployeeManagement extends SystemService {
                     if (employeeList.isEmpty()) {
                         System.out.println("Khong tim thay nhan vien");
                     } else {
-                        System.out.println("||==================  Danh sach nhan vien  ===================||");
                         for (Employee employee1 : employeeList) {
                             this.PrintEmployee(employee1);
                         }
-                        System.out.println("||============================================================||");
                     }
                 }
                 case "3" -> {
@@ -312,11 +308,9 @@ public class EmployeeManagement extends SystemService {
                     if (employeeList.isEmpty()) {
                         System.out.println("Khong tim thay nhan vien");
                     } else {
-                        System.out.println("||==================  Danh sach nhan vien  ===================||");
                         for (Employee employee : employeeList) {
                             this.PrintEmployee(employee);
                         }
-                        System.out.println("||============================================================||");
                     }
                 }
                 case "4" -> {
@@ -326,11 +320,9 @@ public class EmployeeManagement extends SystemService {
                     if (employeeList.isEmpty()) {
                         System.out.println("Khong tim thay nhan vien");
                     } else {
-                        System.out.println("||==================  Danh sach nhan vien  ===================||");
                         for (Employee employee : employeeList) {
                             this.PrintEmployee(employee);
                         }
-                        System.out.println("||============================================================||");
                     }
                 }
                 case "0" -> System.out.println("Thoat chuc nang tim kiem");

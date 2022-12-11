@@ -42,22 +42,24 @@ public class ShiftManagement extends SystemService {
         return null;
     }
 
-    public Shift findByStartTime(String startTime) {
+    public List<Shift> findByStartTime(String startTime) {
+        List<Shift> list = new ArrayList<>();
         for (Shift shift : ShiftManagement.shiftList) {
             if (shift.getStartTime().equals(startTime)) {
-                return shift;
+                list.add(shift);
             }
         }
-        return null;
+        return list;
     }
 
-    public Shift findByEndTime(String endTime) {
+    public List<Shift> findByEndTime(String endTime) {
+        List<Shift> list = new ArrayList<>();
         for (Shift shift : ShiftManagement.shiftList) {
             if (shift.getEndTime().equals(endTime)) {
-                return shift;
+                list.add(shift);
             }
         }
-        return null;
+        return list;
     }
 
     //endregion
@@ -217,52 +219,36 @@ public class ShiftManagement extends SystemService {
             System.out.println("||===============================================||");
             select = sc.nextLine();
             switch (select) {
-                case "1":
+                case "1" -> {
                     System.out.println("Nhap ma ca can tim kiem: ");
                     String id = sc.nextLine();
                     Shift shift = this.findById(id);
-                    if (shift != null) {
-                        this.printShift(shift);
-                    } else {
-                        System.out.println("Khong tim thay ca can tim kiem");
-                    }
-                    break;
-                case "2":
+                    this.printShift(shift);
+                }
+                case "2" -> {
                     System.out.println("Nhap ten ca can tim kiem: ");
                     String name = sc.nextLine();
-                    shift = this.findByName(name);
-                    if (shift != null) {
-                        this.printShift(shift);
-                    } else {
-                        System.out.println("Khong tim thay ca can tim kiem");
-                    }
-                    break;
-                case "3":
+                    Shift shift = this.findByName(name);
+                    this.printShift(shift);
+                }
+                case "3" -> {
                     System.out.println("Nhap gio bat dau can tim kiem: ");
                     String startTime = sc.nextLine();
-                    shift = this.findByStartTime(startTime);
-                    if (shift != null) {
+                    List<Shift> shiftList = this.findByStartTime(startTime);
+                    for (Shift shift : shiftList) {
                         this.printShift(shift);
-                    } else {
-                        System.out.println("Khong tim thay ca can tim kiem");
                     }
-                    break;
-                case "4":
+                }
+                case "4" -> {
                     System.out.println("Nhap gio ket thuc can tim kiem: ");
                     String endTime = sc.nextLine();
-                    shift = this.findByEndTime(endTime);
-                    if (shift != null) {
+                    List<Shift> shiftList = this.findByEndTime(endTime);
+                    for (Shift shift : shiftList) {
                         this.printShift(shift);
-                    } else {
-                        System.out.println("Khong tim thay ca can tim kiem");
                     }
-                    break;
-                case "0":
-                    System.out.println("Thoat chuong trinh");
-                    break;
-                default:
-                    System.out.println("Lua chon khong hop le");
-                    break;
+                }
+                case "0" -> System.out.println("Thoat chuong trinh");
+                default -> System.out.println("Lua chon khong hop le");
             }
         } while (!select.equals("0"));
 
@@ -304,8 +290,13 @@ public class ShiftManagement extends SystemService {
         }
 
     }
+
     //endregion
     private void printShift(Shift shift) {
+        if (shift == null) {
+            System.out.println("Khong tim thay ca");
+            return;
+        }
         System.out.println("Ma ca: " + shift.getId());
         System.out.println("Ten ca: " + shift.getName());
         System.out.println("Gio bat dau: " + shift.getStartTime());
