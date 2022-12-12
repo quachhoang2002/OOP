@@ -111,7 +111,7 @@ public class ShiftManagement extends SystemService {
             endTime = sc.nextLine();
         }
         //validate end time > start time
-        while (!this.validateStartEndTime(endTime, startTime)) {
+        while (isGreaterCheckTime(startTime, endTime)) {
             System.out.println("Gio ket thuc phai lon hon gio bat dau. Vui long nhap lai:");
             endTime = sc.nextLine();
         }
@@ -128,6 +128,7 @@ public class ShiftManagement extends SystemService {
         if (shift != null) {
             String select;
             do {
+                this.printShift(shift);
                 System.out.println("||============== Sua ca ==============||");
                 System.out.println("|| 1. Sua ten ca                      ||");
                 System.out.println("|| 2. Sua gio bat dau                 ||");
@@ -150,11 +151,12 @@ public class ShiftManagement extends SystemService {
                             startTime = sc.nextLine();
                         }
                         String endTime = shift.getEndTime();
-                        while (!this.validateStartEndTime(endTime, startTime)) {
+                        while (isGreaterCheckTime(startTime, endTime)) {
                             System.out.println("Gio ket thuc phai lon hon gio bat dau. Vui long nhap lai");
                             startTime = sc.nextLine();
                         }
                         shift.setStartTime(startTime);
+                        shift.setWorkingTime(calculateWorkingTime(startTime, endTime));
                     }
                     case "3" -> {
                         System.out.println("Nhap gio ket thuc moi: ");
@@ -166,7 +168,7 @@ public class ShiftManagement extends SystemService {
                             endTime = sc.nextLine();
                         }
                         //validate end time > start time
-                        while (!this.validateStartEndTime(endTime, startTime)) {
+                        while (isGreaterCheckTime(startTime, endTime)) {
                             System.out.println("Gio ket thuc phai lon hon gio bat dau. Vui long nhap lai");
                             endTime = sc.nextLine();
                         }

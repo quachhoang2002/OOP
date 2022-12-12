@@ -145,7 +145,7 @@ public class EmployeeManagement extends SystemService {
         employee.setPhone(sc.nextLine());
         System.out.print("Nhap email nhan vien: ");
         employee.setEmail(sc.nextLine());
-        System.out.print("Nhap luong nhan vien: ");
+        System.out.print("Nhap luong nhan vien (luong/gio): ");
         String salary = sc.nextLine();
         //validate salary
         while (!isNumber(salary)) {
@@ -188,7 +188,7 @@ public class EmployeeManagement extends SystemService {
                 System.out.println("|| 3. Sua gioi tinh nhan vien               ||");
                 System.out.println("|| 4. Sua so dien thoai nhan vien           ||");
                 System.out.println("|| 5. Sua email nhan vien                   ||");
-                System.out.println("|| 6. Sua luong nhan vien                   ||");
+                System.out.println("|| 6. Sua luong nhan vien (luong/gio)       ||");
                 System.out.println("|| 7. Sua phong ban nhan vien               ||");
                 System.out.println("|| 8. Sua chuc vu nhan vien                 ||");
                 System.out.println("|| 0. Exit                                  ||");
@@ -198,22 +198,27 @@ public class EmployeeManagement extends SystemService {
                     case "1":
                         System.out.println("Nhap ten nhan vien moi: ");
                         employee.setName(sc.nextLine());
+                        this.writeFile();
                         break;
                     case "2":
                         System.out.println("Nhap tuoi nhan vien moi: ");
                         employee.setAge(sc.nextLine());
+                        this.writeFile();
                         break;
                     case "3":
                         System.out.println("Nhap gioi tinh nhan vien moi: ");
                         employee.setGender(sc.nextLine());
+                        this.writeFile();
                         break;
                     case "4":
                         System.out.println("Nhap so dien thoai nhan vien moi: ");
                         employee.setPhone(sc.nextLine());
+                        this.writeFile();
                         break;
                     case "5":
                         System.out.println("Nhap email nhan vien moi: ");
                         employee.setEmail(sc.nextLine());
+                        this.writeFile();
                         break;
                     case "6":
                         System.out.println("Nhap luong nhan vien moi: ");
@@ -223,6 +228,7 @@ public class EmployeeManagement extends SystemService {
                             salary = sc.nextLine();
                         }
                         employee.setSalary(Integer.parseInt(salary));
+                        this.writeFile();
                         break;
                     case "7":
                         System.out.println("Nhap phong ban nhan vien moi: ");
@@ -240,16 +246,17 @@ public class EmployeeManagement extends SystemService {
                             departmentId = sc.nextLine();
                         }
                         employee.setDepartmentId(departmentId);
+                        this.writeFile();
                         break;
                     case "8":
                         System.out.println("Nhap chuc vu nhan vien moi: ");
                         employee.setPermission(sc.nextLine());
+                        this.writeFile();
                         break;
                     case "0":
                         break;
                 }
             } while (!select.equals("0"));
-            this.writeFile();
         }
     }
 

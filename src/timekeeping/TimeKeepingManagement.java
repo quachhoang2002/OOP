@@ -212,18 +212,7 @@ public class TimeKeepingManagement extends SystemService {
      * @param time
      * @return true if check time is greater than  time
      */
-    public boolean isGreaterCheckTime(String checkTime, String time) {
-        String[] checkInTime = checkTime.split(":");
-        String[] startTimeTime = time.split(":");
-        if (Integer.parseInt(checkInTime[0]) < Integer.parseInt(startTimeTime[0])) {
-            return false;
-        } else if (Integer.parseInt(checkInTime[0]) == Integer.parseInt(startTimeTime[0])) {
-            if (Integer.parseInt(checkInTime[1]) < Integer.parseInt(startTimeTime[1])) {
-                return false;
-            }
-        }
-        return true;
-    }
+
 
     //need to do
     public void add() {
@@ -241,6 +230,12 @@ public class TimeKeepingManagement extends SystemService {
         }
         String select;
         do {
+            Shift shift = this.shiftManagement.findById(timeKeeping.getShiftId());
+            if (shift == null) {
+                System.out.println("Khong tim thay ca lam viec");
+                break;
+            }
+            this.printTimeKeeping(timeKeeping);
             System.out.println("||=================== Sua thong tin cham cong ===================||");
             System.out.println("||1. Sua thoi gian check in                                    ||");
             System.out.println("||2. Sua thoi gian check out                                   ||");
@@ -251,29 +246,30 @@ public class TimeKeepingManagement extends SystemService {
                 case "1" -> {
                     System.out.println("Nhap thoi gian check in: ");
                     String checkIn = sc.nextLine();
-                    if (!validateStartEndTime(checkIn, timeKeeping.getCheckOut())) {
+                    if (isGreaterCheckTime(checkIn, timeKeeping.getCheckOut()) || isGreaterCheckTime(checkIn, shift.getEndTime()) || !isGreaterCheckTime(checkIn, shift.getStartTime())) {
+                        System.out.println("Thoi gian check in khong hop le");
+                        break;
+                    }
+                    if (!isGreaterCheckTime(checkIn, shift.getStartTime())) {
                         System.out.println("Thoi gian check in khong hop le");
                         break;
                     }
                     timeKeeping.setCheckIn(checkIn);
+                    timeKeeping.setTimeWorking(this.calculateWorkingTime(checkIn, timeKeeping.getCheckOut()));
                     this.writeFile();
                 }
                 case "2" -> {
                     System.out.println("Nhap thoi gian check out: ");
                     String checkOut = sc.nextLine();
-                    if (!validateStartEndTime(timeKeeping.getCheckIn(), checkOut)) {
+                    if (isGreaterCheckTime(timeKeeping.getCheckIn(), checkOut)) {
                         System.out.println("Thoi gian check out khong hop le");
-                        break;
-                    }
-                    Shift shift = this.shiftManagement.findById(timeKeeping.getShiftId());
-                    if (shift == null) {
-                        System.out.println("Khong tim thay ca lam viec");
                         break;
                     }
                     if (isGreaterCheckTime(checkOut, shift.getEndTime())) {
                         checkOut = shift.getEndTime();
                     }
                     timeKeeping.setCheckOut(checkOut);
+                    timeKeeping.setTimeWorking(this.calculateWorkingTime(timeKeeping.getCheckIn(), checkOut));
                     this.writeFile();
                 }
                 case "0" -> System.out.println("Thoat chuc nang sua");

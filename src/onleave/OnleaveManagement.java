@@ -146,6 +146,7 @@ public class OnleaveManagement extends SystemService {
         } else {
             String select;
             do {
+                this.printOnleave(onleave);
                 System.out.println("||============== Sua nghi phep ==============||");
                 System.out.println("|| 1. Sua ma nhan vien.                      ||");
                 System.out.println("|| 2. Sua ma ca.                             ||");
@@ -164,6 +165,7 @@ public class OnleaveManagement extends SystemService {
                             employeeId = sc.nextLine();
                         }
                         onleave.setEmployeeId(employeeId);
+                        this.writeFile();
                     }
                     case "2" -> {
                         System.out.println("Nhap ma ca: ");
@@ -176,6 +178,7 @@ public class OnleaveManagement extends SystemService {
                             shiftId = sc.nextLine();
                         }
                         onleave.setShiftId(shiftId);
+                        this.writeFile();
                     }
                     case "3" -> {
                         String date = "";
@@ -183,14 +186,16 @@ public class OnleaveManagement extends SystemService {
                             date = this.dateInput();
                         } catch (Exception e) {
                             System.out.println("Nhap sai dinh dang ngay");
-                            return;
+                            break;
                         }
                         onleave.setDate(date);
+                        this.writeFile();
                     }
                     case "4" -> {
                         System.out.println("Nhap ly do nghi phep: ");
                         String reason = sc.nextLine();
                         onleave.setReason(reason);
+                        this.writeFile();
                     }
                     case "0" -> System.out.println("Thoat");
                     default -> System.out.println("Nhap sai");

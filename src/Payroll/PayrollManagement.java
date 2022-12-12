@@ -140,6 +140,7 @@ public class PayrollManagement extends SystemService {
             System.out.println("Khong tim thay bang luong");
             return;
         }
+        this.printPay(payroll);
         System.out.println("Nhap tien luong moi: ");
         float salary = Float.parseFloat(sc.nextLine());
         payroll.setTotalSalary(salary);

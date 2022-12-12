@@ -1,4 +1,5 @@
 NP-9d1653ea|NV-test|CA-test|22-10-2022|thich thi nghi
-NP-9d1653ea|NV-test|CA-test|07-11-2022|thich thi nghi
 NP-1ea72488|NV-test|CA-test|11-11-2022|thic hti nghi
 NP-0c3e17e2|NV-test|CA-test|13-11-2022|thich thi nghi
+NP-4AF48D|NV-test|CA-test|15-11-2022|Khong thich di lam
+NP-9C54F8|NV-test|CA-test|20-11-2022|Luoi lam

@@ -23,10 +23,10 @@ abstract public class SystemService implements ISystem {
     }
 
     //gererate id
-    public static String generateId(String $type) {
+    public static String generateId(String $prefix) {
         String UID = UUID.randomUUID().toString().replace("-", "");
         UID = UID + System.currentTimeMillis();
-        UID = $type + "-" + UID.substring(9, 15).toUpperCase();
+        UID = $prefix + "-" + UID.substring(9, 15).toUpperCase();
         return UID;
     }
 
@@ -37,6 +37,9 @@ abstract public class SystemService implements ISystem {
 
     protected boolean checkDate(String date) {
         String[] dateArr = date.split("-");
+        if (dateArr.length != 3) {
+            return false;
+        }
         int day = Integer.parseInt(dateArr[0]);
         int month = Integer.parseInt(dateArr[1]);
         int year = Integer.parseInt(dateArr[2]);
@@ -93,6 +96,22 @@ abstract public class SystemService implements ISystem {
             }
         }
         return false;
+    }
+
+    public boolean isGreaterCheckTime(String checkTime, String time) {
+        if (!validateTime(checkTime) || !validateTime(time)) {
+            return false;
+        }
+        String[] checkInTime = checkTime.split(":");
+        String[] startTimeTime = time.split(":");
+        if (Integer.parseInt(checkInTime[0]) < Integer.parseInt(startTimeTime[0])) {
+            return false;
+        } else if (Integer.parseInt(checkInTime[0]) == Integer.parseInt(startTimeTime[0])) {
+            if (Integer.parseInt(checkInTime[1]) < Integer.parseInt(startTimeTime[1])) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public int calculateWorkingTime(String startTime, String endTime) {

@@ -1,6 +1,5 @@
-NV-test|HoangDeptrai|12|nam|09213123|asdfda|12|PB-a2ab7f99|chu tich
-NV-3e918e27|hoangsetgs|3|nam|0129212|dmamd|22|PB-3be047dd|adodas
-NV-90C418|test|22|das|12112|dsafadf|22|PB-ABB468|sieu nhan
-NV-F0341D|dafglkad;sflkdsa|asdfasdf|asdfkadsfadsf|asdf|adsfdas|222|PB-test|faglklsd;kfg
-NV-D9747C|2|2|2|2|2|2|PB-test|2
-NV-0BA400|2|2|2|2|2|23|PB-test|3
+NV-test|HoangDeptrai|25|nam|09213123|hoang@gmail.com|44|PB-a2ab7f99|chu tich
+NV-3e918e27|SieuDepTrai|Nam|nam|0129212|deptrai@gmail.com|22|PB-3be047dd|Nhan Vien
+NV-90C418|Hai Duoi|22|Nam|03232222|HaiDuoi@gmail.com|22|PB-ABB468|sieu nhan
+NV-AB5478|KimNalDo|27|Nam|0922211233|kimnaldo|20|PB-3be047dd|Nguoi Hung Han Quoc
+NV-D1D4CC|Trang Nemo|30|Nu|02212223333|fidingnemo@gmail.com|15|PB-F1D4AB|Lao Cong
