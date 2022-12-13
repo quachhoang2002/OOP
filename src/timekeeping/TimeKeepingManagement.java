@@ -205,14 +205,6 @@ public class TimeKeepingManagement extends SystemService {
         System.out.println("========================================================");
     }
 
-    //validate checkin time
-
-    /**
-     * @param checkTime
-     * @param time
-     * @return true if check time is greater than  time
-     */
-
 
     //need to do
     public void add() {

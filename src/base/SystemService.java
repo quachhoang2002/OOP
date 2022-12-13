@@ -100,7 +100,7 @@ abstract public class SystemService implements ISystem {
 
     public boolean isGreaterCheckTime(String checkTime, String time) {
         if (!validateTime(checkTime) || !validateTime(time)) {
-            return false;
+            throw new IllegalArgumentException("Invalid time format");
         }
         String[] checkInTime = checkTime.split(":");
         String[] startTimeTime = time.split(":");

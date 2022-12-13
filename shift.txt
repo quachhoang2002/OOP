@@ -1,5 +1,5 @@
 CA-f586567f|Ca Chieu|12:00|16:00|240
-CA-test|Ca Sang Som Tinh Mo|2:00|6:00|300
+CA-test|Ca Sang Som Tinh Mo|15:00|18:00|180
 CA-7f641012|Ca sang|7:00|12:00|300
 CA-a19beb11|Ca 2|18:00|23:55|355
 CA-CC449A|CA 5|12:00|18:00|360

@@ -13,7 +13,9 @@ public class DepartmentManagement extends SystemService {
     private static final String FILE_PATH = "department.txt";
     protected static List<Department> departmentList = new ArrayList<>();
     public DepartmentManagement() {
-        this.readFile();
+        if (departmentList.isEmpty()) {
+            this.readFile();
+        }
     }
 
     //region implement method
@@ -98,13 +100,13 @@ public class DepartmentManagement extends SystemService {
         System.out.println("||================== Xoa Phong Ban ===================||");
         System.out.println("Nhap ma phong can xoa: ");
         String id = sc.nextLine();
-        Department department = findById(id);
-        if (department != null) {
-            departmentList.remove(department);
-            this.writeFile();
-            System.out.println("Xoa thanh cong");
+        Department department = this.findById(id);
+        if (department == null) {
+            System.out.println("Ma phong ban khong ton tai, xin kiem tra lai !!!");
         } else {
-            System.out.println("Khong tim thay phong ban");
+            departmentList.remove(department);
+            System.out.println("||================== Xoa Thanh Cong ===================||");
+            this.writeFile();
         }
     }
 
